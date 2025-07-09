@@ -1,9 +1,80 @@
 import React, { useState } from "react";
+import { Link } from "react-router";
 import RegistrationBanner from "../../assets/images/RegistrationBanner.png";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const Registration = () => {
+  const auth = getAuth();
+
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [emailError, setEmailError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+    setEmailError("");
+  };
+
+  const handleName = (e) => {
+    setName(e.target.value);
+    setNameError("");
+  };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+    setPasswordError("");
+  };
+
+  const handleRegistration = (e) => {
+    e.preventDefault();
+
+    if (!email) {
+      setEmailError("Please enter a email address");
+    } else {
+      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        setEmailError("Please enter a valid email");
+      }
+    }
+    if (!password) {
+      // If password is empty or null
+      setPasswordError("Password is required"); // Show error message
+    } else {
+      if (password.length < 6) {
+        // If password is not empty but less than 6 characters
+        setPasswordError("Password must be at least 6 characters"); // Show error message
+      }
+    }
+
+    if (!name) {
+      setNameError("Name is required");
+    }
+
+    if (
+      email &&
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) &&
+      name &&
+      password.length >= 6
+    ) {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          console.log("regis done");
+          setEmail("");
+          setName("");
+          setPassword("");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
 
   return (
     <div className="flex h-screen w-full justify-center items-center">
