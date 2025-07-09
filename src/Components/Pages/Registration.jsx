@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import RegistrationBanner from "../../assets/images/RegistrationBanner.png";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
 
 const Registration = () => {
   const auth = getAuth();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -33,51 +35,73 @@ const Registration = () => {
     setPasswordError("");
   };
 
-  const handleRegistration = (e) => {
-    e.preventDefault();
+  const handleRegistration = () => {
+    let isValid = true;
 
+    // Email validation
     if (!email) {
       setEmailError("Please enter a email address");
-    } else {
-      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-        setEmailError("Please enter a valid email");
-      }
-    }
-    if (!password) {
-      // If password is empty or null
-      setPasswordError("Password is required"); // Show error message
-    } else {
-      if (password.length < 6) {
-        // If password is not empty but less than 6 characters
-        setPasswordError("Password must be at least 6 characters"); // Show error message
-      }
+      isValid = false;
+    } else if (email.includes(" ")) {
+      setEmailError("Email should not contain spaces");
+      isValid = false;
+    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      setEmailError("Please enter a valid email");
+      isValid = false;
     }
 
+    // Password validation
+    if (!password) {
+      setPasswordError("Password is required");
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      isValid = false;
+    }
+
+    // Name validation
     if (!name) {
       setNameError("Name is required");
+      isValid = false;
     }
 
-    if (
-      email &&
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) &&
-      name &&
-      password.length >= 6
-    ) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          console.log("regis done");
-          setEmail("");
-          setName("");
-          setPassword("");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    // Only proceed if all validations pass
+    if (!isValid) {
+      return; // Stop execution if validation fails
     }
+
+    // If we get here, all validations passed
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        setEmail("");
+        setName("");
+        setPassword("");
+        toast.success("Registration successful");
+        setTimeout(() => {
+          navigate("/Login");
+        }, 2500);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+        if (error.code === "auth/email-already-in-use") {
+          setEmailError("Email already in use");
+        }
+      });
   };
 
   return (
     <div className="flex h-screen w-full justify-center items-center">
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+        theme="light"
+      />
       <div className="w-[50%] h-full flex flex-col justify-center max-w-[50%] pl-[40px] items-center">
         <div>
           <h1 className="font-nunito text-[34px] font-bold text-[#11175D]">
@@ -105,6 +129,7 @@ const Registration = () => {
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-[8px] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                       placeholder="example@gmail.com"
                       required
+                      value={email}
                     />
                   </div>
                 ) : (
@@ -118,14 +143,15 @@ const Registration = () => {
                     <input
                       onChange={handleEmail}
                       type="text"
-                      id="username-error"
-                      class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-base rounded-[8px] focus:ring-red-500 focus:border-red-500 block w-full p-2.5 "
+                      id="email"
+                      className="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-base rounded-[8px] focus:ring-red-500 focus:border-red-500 block w-full p-2.5 "
                       placeholder="example@gmail.com"
+                      value={email}
                     />
                   </div>
                 )}
 
-                <p class="mt-2 text-sm text-red-600">{emailError}</p>
+                <p className="mt-2 text-sm text-red-600">{emailError}</p>
               </div>
               <div className="mb-5">
                 {!nameError ? (
@@ -143,6 +169,7 @@ const Registration = () => {
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-[8px] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                       placeholder="example@gmail.com"
                       required
+                      value={name}
                     />
                   </div>
                 ) : (
@@ -157,13 +184,14 @@ const Registration = () => {
                       onChange={handleName}
                       type="text"
                       id="fullname"
-                      class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-base rounded-[8px] focus:ring-red-500 focus:border-red-500 block w-full p-2.5 "
+                      className="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-base rounded-[8px] focus:ring-red-500 focus:border-red-500 block w-full p-2.5 "
                       placeholder="John doe"
+                      value={name}
                     />
                   </div>
                 )}
 
-                <p class="mt-2 text-sm text-red-600">{nameError}</p>
+                <p className="mt-2 text-sm text-red-600">{nameError}</p>
               </div>
               <div className="mb-5">
                 {!passwordError ? (
@@ -182,6 +210,7 @@ const Registration = () => {
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         placeholder="Enter a password"
                         required
+                        value={password}
                       />
                       {showPassword ? (
                         <FaEye
@@ -212,6 +241,7 @@ const Registration = () => {
                         className="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-base rounded-[8px] focus:ring-red-500 focus:border-red-500 block w-full p-2.5 "
                         placeholder="Enter a password"
                         required
+                        value={password}
                       />
                       {showPassword ? (
                         <FaEye
