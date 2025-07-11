@@ -1,27 +1,105 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import loginBanner from "../../assets/images/LoginBanner.jpg";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
+import { Link, useNavigate } from "react-router";
+import LoadingBar from "react-top-loading-bar";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
+import ForgetPass from "../Popup/ForgetPass";
+import { AnimatePresence } from "framer-motion";
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
+  const provider = new GoogleAuthProvider();
+  const navigate = useNavigate();
+  const loadingBarRef = useRef(null); // Create a ref for the loading bar
+  const auth = getAuth();
+
   const [emailError, setEmailError] = useState("");
-  const [nameError, setNameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const [showForgetPass, setShowForgetPass] = useState(false);
+  const handleGoogleSignIn = () => {
+    // Start loading bar
+    loadingBarRef.current.staticStart();
+
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+
+        // The signed-in user info
+        const user = result.user;
+
+        console.log("Google Sign-In Successful", { user, token });
+
+        // Show success message
+        toast.success("Google login successful");
+
+        // Complete loading bar
+        loadingBarRef.current.complete();
+
+        // Navigate to home after a short delay
+        setTimeout(() => {
+          navigate("/Home");
+        }, 1500);
+      })
+      .catch((error) => {
+        // Complete loading bar on error
+        loadingBarRef.current.complete();
+
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.customData.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+
+        console.error("Google Sign-In Error", {
+          errorCode,
+          errorMessage,
+          email,
+          credential,
+        });
+
+        // Show appropriate error messages to user
+        switch (errorCode) {
+          case "auth/account-exists-with-different-credential":
+            toast.error("An account already exists with this email");
+            break;
+          case "auth/popup-closed-by-user":
+            toast.error("Sign in popup was closed before completing");
+            break;
+          case "auth/cancelled-popup-request":
+            // No need to show error if user cancelled
+            break;
+          case "auth/popup-blocked":
+            toast.error(
+              "Popup was blocked by your browser. Please allow popups for this site"
+            );
+            break;
+          case "auth/network-request-failed":
+            toast.error("Network error. Please check your internet connection");
+            break;
+          default:
+            toast.error("Google sign in failed. Please try again");
+        }
+      });
+  };
+
   const handleEmail = (e) => {
     setEmail(e.target.value);
     setEmailError("");
-  };
-
-  const handleName = (e) => {
-    setName(e.target.value);
-    setNameError("");
   };
 
   const handlePassword = (e) => {
@@ -29,32 +107,96 @@ const Login = () => {
     setPasswordError("");
   };
 
-  const handleRegistration = (e) => {
-    e.preventDefault();
+  const handleLogin = () => {
+    let isValid = true;
 
+    // Start loading bar
+    loadingBarRef.current.staticStart();
+
+    // Email validation
     if (!email) {
-      setEmailError("Please enter a email address");
-    } else {
-      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-        setEmailError("Please enter a valid email");
-      }
-    }
-    if (!password) {
-      // If password is empty or null
-      setPasswordError("Password is required"); // Show error message
-    } else {
-      if (password.length < 6) {
-        // If password is not empty but less than 6 characters
-        setPasswordError("Password must be at least 6 characters"); // Show error message
-      }
+      setEmailError("Please enter an email address");
+      isValid = false;
+    } else if (email.includes(" ")) {
+      setEmailError("Email should not contain spaces");
+      isValid = false;
+    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      setEmailError("Please enter a valid email");
+      isValid = false;
     }
 
-    if (!name) {
-      setNameError("Name is required");
+    // Password validation
+    if (!password) {
+      setPasswordError("Password is required");
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      isValid = false;
     }
+
+    if (!isValid) {
+      loadingBarRef.current.complete();
+      return;
+    }
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        setEmail("");
+        setPassword("");
+        toast.success("Login successful");
+        setTimeout(() => {
+          loadingBarRef.current.complete();
+          navigate("/Home");
+        }, 1800);
+      })
+      .catch((error) => {
+        loadingBarRef.current.complete();
+        switch (error.code) {
+          case "auth/invalid-credential":
+            setEmailError("Invalid email or password");
+            setPasswordError("Invalid email or password");
+            toast.error("Wrong credentials, please try again");
+            break;
+          case "auth/too-many-requests":
+            toast.error("Too many attempts. Please try again later.");
+            break;
+          case "auth/user-disabled":
+            toast.error("This account has been disabled.");
+            break;
+          default:
+            toast.error("An error occurred. Please try again.");
+            console.log("Error Code:", error.code, "Message:", error.message);
+        }
+      });
   };
+
   return (
     <div>
+      <AnimatePresence>
+        {showForgetPass && (
+          <ForgetPass
+            key="forget-pass"
+            onclose={() => setShowForgetPass(false)}
+          />
+        )}
+      </AnimatePresence>
+      <LoadingBar
+        color="#11175D" // You can change this color to match your theme
+        ref={loadingBarRef}
+        height={4}
+        shadow={true}
+      />
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+        theme="light"
+      />
       <div className="flex h-screen w-full justify-center items-center">
         <div className="w-[50%] h-full flex flex-col justify-center max-w-[50%] pl-[40px] items-center">
           <div>
@@ -64,7 +206,7 @@ const Login = () => {
             <p className="font-nunito text-[20px] font-[400] text-primary-opacity">
               MizoChat is just a step ahead
             </p>
-            <li className="list-none mt-[20px]">
+            <div onClick={handleGoogleSignIn} className=" mt-[20px]">
               <a
                 href="#"
                 className="flex items-center p-3 text-base font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-200 group hover:shadow border border-gray-300 hover:border-gray-200"
@@ -111,7 +253,7 @@ const Login = () => {
                   Login with Google
                 </span>
               </a>
-            </li>
+            </div>
 
             <div className="items-start mt-[35px]">
               <div className="max-w-sm">
@@ -126,7 +268,8 @@ const Login = () => {
                       </label>
                       <input
                         onChange={handleEmail}
-                        type="text"
+                        value={email}
+                        type="email"
                         id="email"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-[8px] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                         placeholder="example@gmail.com"
@@ -143,8 +286,9 @@ const Login = () => {
                       </label>
                       <input
                         onChange={handleEmail}
-                        type="text"
-                        id="username-error"
+                        value={email}
+                        type="email"
+                        id="email"
                         className="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-base rounded-[8px] focus:ring-red-500 focus:border-red-500 block w-full p-2.5 "
                         placeholder="example@gmail.com"
                       />
@@ -162,9 +306,10 @@ const Login = () => {
                       >
                         Password
                       </label>
-                      <div className="relative">
+                      <div className="relative z-0">
                         <input
                           onChange={handlePassword}
+                          value={password}
                           type={showPassword ? "text" : "password"}
                           id="password"
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -195,6 +340,7 @@ const Login = () => {
                       <div className="relative">
                         <input
                           onChange={handlePassword}
+                          value={password}
                           type={showPassword ? "text" : "password"}
                           id="password"
                           className="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-base rounded-[8px] focus:ring-red-500 focus:border-red-500 block w-full p-2.5 "
@@ -218,18 +364,27 @@ const Login = () => {
                   <p className="mt-2 text-sm text-red-600">{passwordError}</p>
                 </div>
                 <button
-                  onClick={handleRegistration}
+                  onClick={handleLogin}
                   type="submit"
                   className="mt-[20px] w-full py-[20px] rounded-[8px] text-white font-nunito font-[600] text-[18px] bg-black cursor-pointer hover:bg-[#16115d] transition duration-300"
                 >
                   Login to continue
                 </button>
-                <div className="mt-[30px] w-full items-center flex justify-center">
-                  <p className="font-nunito text-[16px] text-[#11175D]">
+                <div className="mt-[30px] w-full items-center flex flex-col justify-center">
+                  <p
+                    onClick={() => setShowForgetPass(true)}
+                    className="font-nunito cursor-pointer text-sm text-[#11175D]"
+                  >
+                    Forgot Password?
+                  </p>
+                  <p className="mt-2 font-nunito text-[16px] text-[#11175D]">
                     don't have any account?{" "}
-                    <a href="/Home" className="text-yellow-500 font-bold">
+                    <Link
+                      to="/Registration"
+                      className="text-yellow-500 font-bold"
+                    >
                       Register Now
-                    </a>
+                    </Link>
                   </p>
                 </div>
               </div>

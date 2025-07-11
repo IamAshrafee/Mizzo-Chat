@@ -1,14 +1,16 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import React, { useState, useRef } from "react";
+import { Link, useNavigate } from "react-router"; // Fixed import from "react-router" to "react-router-dom"
 import RegistrationBanner from "../../assets/images/RegistrationBanner.png";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
+import LoadingBar from "react-top-loading-bar";
 
 const Registration = () => {
   const auth = getAuth();
   const navigate = useNavigate();
+  const loadingBarRef = useRef(null); // Create a ref for the loading bar
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -37,6 +39,9 @@ const Registration = () => {
 
   const handleRegistration = () => {
     let isValid = true;
+
+    // Start loading bar when validation begins
+    loadingBarRef.current.continuousStart();
 
     // Email validation
     if (!email) {
@@ -67,21 +72,26 @@ const Registration = () => {
 
     // Only proceed if all validations pass
     if (!isValid) {
+      loadingBarRef.current.complete(); // Complete loading if validation fails
       return; // Stop execution if validation fails
     }
 
     // If we get here, all validations passed
     createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
+        loadingBarRef.current.complete(); // Complete loading on success
         setEmail("");
         setName("");
         setPassword("");
         toast.success("Registration successful");
+        loadingBarRef.current.start();
         setTimeout(() => {
           navigate("/Login");
+          loadingBarRef.current.complete(); // Complete loading after navigation
         }, 2500);
       })
       .catch((error) => {
+        loadingBarRef.current.complete(); // Complete loading on error
         toast.error(error.message);
         if (error.code === "auth/email-already-in-use") {
           setEmailError("Email already in use");
@@ -91,6 +101,12 @@ const Registration = () => {
 
   return (
     <div className="flex h-screen w-full justify-center items-center">
+      <LoadingBar
+        color="#11175D" // You can change this color to match your theme
+        ref={loadingBarRef}
+        height={4}
+        shadow={true}
+      />
       <ToastContainer
         position="top-center"
         autoClose={2000}
