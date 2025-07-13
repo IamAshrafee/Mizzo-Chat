@@ -3,6 +3,9 @@ import Registration from "./Components/Pages/Registration";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Login from "./Components/Pages/Login";
 import Home from "./Components/Pages/Home";
+import Test from "./Components/Pages/Test";
+import store from "./store";
+import { Provider } from "react-redux";
 
 const router = createBrowserRouter([
   {
@@ -17,10 +20,18 @@ const router = createBrowserRouter([
     path: "/Home",
     element: <Home />,
   },
+  {
+    path: "/test",
+    element: <Test />,
+  },
 ]);
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  );
 };
 
 export default App;
