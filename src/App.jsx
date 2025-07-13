@@ -6,6 +6,10 @@ import Home from "./Components/Pages/Home";
 import Test from "./Components/Pages/Test";
 import store from "./store";
 import { Provider } from "react-redux";
+import Messages from "./Components/Pages/Message";
+import Settings from "./Components/Pages/Settings";
+import "./App.css";
+import "./index.css";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +27,14 @@ const router = createBrowserRouter([
   {
     path: "/test",
     element: <Test />,
+  },
+  {
+    path: "/Messages",
+    element: <Messages />,
+  },
+  {
+    path: "/Settings",
+    element: <Settings />,
   },
 ]);
 

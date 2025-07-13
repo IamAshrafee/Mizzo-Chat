@@ -1,3 +1,4 @@
+import { BiPlus } from "react-icons/bi";
 import React from "react";
 import ProfilePicture from "../../assets/images/ProfilePicture.jpg";
 import { GoHome } from "react-icons/go";
@@ -5,10 +6,10 @@ import { IoExit } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
 import { IoMdSettings } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
-
+import Container from "../Layout/Container";
 const Home = () => {
   return (
-    <div className="w-full h-screen p-[52px] flex gap-[45px] bg-gray-100">
+    <Container>
       {/* Sidebar */}
       <div className="w-[120px] bg-black rounded-[20px] flex flex-col justify-between shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)]">
         <div className="h-[150px] w-full flex justify-center items-center">
@@ -87,7 +88,7 @@ const Home = () => {
               <div className="h-full bg-white rounded-[20px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] flex flex-col">
                 <div className="flex justify-between items-center px-[22px] pt-[22px]">
                   <h1 className="font-poppins text-[20px] font-[600]">
-                    Friends
+                    Groups List
                   </h1>
                   <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
                 </div>
@@ -110,9 +111,9 @@ const Home = () => {
                       </div>
                     </div>
                     <div>
-                      <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                        Today, 8:56pm
-                      </p>
+                      <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                        Join
+                      </button>
                     </div>
                   </div>
 
@@ -134,9 +135,9 @@ const Home = () => {
                       </div>
                     </div>
                     <div>
-                      <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                        Today, 7:30pm
-                      </p>
+                      <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                        Join
+                      </button>
                     </div>
                   </div>
 
@@ -158,9 +159,9 @@ const Home = () => {
                       </div>
                     </div>
                     <div>
-                      <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                        Today, 6:45pm
-                      </p>
+                      <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                        Join
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -255,7 +256,9 @@ const Home = () => {
           <div className="flex-1 min-h-0 overflow-hidden">
             <div className="h-full bg-white rounded-[20px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] flex flex-col">
               <div className="flex justify-between items-center px-[22px] pt-[22px]">
-                <h1 className="font-poppins text-[20px] font-[600]">Friends</h1>
+                <h1 className="font-poppins text-[20px] font-[600]">
+                  User List
+                </h1>
                 <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
               </div>
               <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
@@ -277,9 +280,9 @@ const Home = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                      Today, 2:45pm
-                    </p>
+                    <button className="px-3 p-2 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                      <BiPlus className="text-white" />
+                    </button>
                   </div>
                 </div>
 
@@ -301,9 +304,9 @@ const Home = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                      Today, 1:30pm
-                    </p>
+                    <button className="px-3 p-2 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                      <BiPlus className="text-white" />
+                    </button>
                   </div>
                 </div>
 
@@ -325,9 +328,9 @@ const Home = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                      Today, 12:15pm
-                    </p>
+                    <button className="px-3 p-2 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                      <BiPlus className="text-white" />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -341,7 +344,9 @@ const Home = () => {
           <div className="flex-1 min-h-0 overflow-hidden">
             <div className="h-full bg-white rounded-[20px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] flex flex-col">
               <div className="flex justify-between items-center px-[22px] pt-[22px]">
-                <h1 className="font-poppins text-[20px] font-[600]">Friends</h1>
+                <h1 className="font-poppins text-[20px] font-[600]">
+                  Friends Requests
+                </h1>
                 <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
               </div>
               <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
@@ -362,9 +367,9 @@ const Home = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                      Today, 8:56pm
-                    </p>
+                    <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                      Accept
+                    </button>
                   </div>
                 </div>
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
@@ -384,9 +389,9 @@ const Home = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                      Today, 8:56pm
-                    </p>
+                    <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                      Accept
+                    </button>
                   </div>
                 </div>
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
@@ -406,9 +411,9 @@ const Home = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                      Today, 8:56pm
-                    </p>
+                    <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                      Accept
+                    </button>
                   </div>
                 </div>
                 {/* Add more friend items as needed */}
@@ -420,7 +425,9 @@ const Home = () => {
           <div className="flex-1 min-h-0 overflow-hidden">
             <div className="h-full bg-white rounded-[20px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] flex flex-col">
               <div className="flex justify-between items-center px-[22px] pt-[22px]">
-                <h1 className="font-poppins text-[20px] font-[600]">Friends</h1>
+                <h1 className="font-poppins text-[20px] font-[600]">
+                  My Groups
+                </h1>
                 <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
               </div>
               <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
@@ -477,7 +484,9 @@ const Home = () => {
           <div className="flex-1 min-h-0 overflow-hidden">
             <div className="h-full bg-white rounded-[20px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] flex flex-col">
               <div className="flex justify-between items-center px-[22px] pt-[22px]">
-                <h1 className="font-poppins text-[20px] font-[600]">Friends</h1>
+                <h1 className="font-poppins text-[20px] font-[600]">
+                  Blocked Users
+                </h1>
                 <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
               </div>
               <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
@@ -498,9 +507,9 @@ const Home = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                      Today, 8:56pm
-                    </p>
+                    <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                      Unblock
+                    </button>
                   </div>
                 </div>
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
@@ -520,9 +529,9 @@ const Home = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                      Today, 8:56pm
-                    </p>
+                    <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                      Unblock
+                    </button>
                   </div>
                 </div>
                 {/* Add more friend items as needed */}
@@ -531,7 +540,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 
