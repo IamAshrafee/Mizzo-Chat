@@ -6,7 +6,8 @@ import { AiOutlineMessage } from "react-icons/ai";
 import { IoMdSettings } from "react-icons/io";
 import { IoExit } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { FaUserFriends } from "react-icons/fa";
+import ProfilePicture1 from "../../assets/images/ProfilePicture1.jpg";
+import ProfilePicture2 from "../../assets/images/ProfilePicture2.jpeg";
 
 const Message = () => {
   return (
@@ -119,13 +120,13 @@ const Message = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture1}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
                     <div className="flex flex-col">
                       <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                        John Doe
+                        Selina Mortugize
                       </p>
                       <p className="text-primary-des font-poppins text-[12px] font-medium">
                         Dinner?
@@ -143,7 +144,7 @@ const Message = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture2}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -167,7 +168,7 @@ const Message = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture1}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -197,7 +198,7 @@ const Message = () => {
               <div className=" flex justify-between items-center pb-3.5 border-b border-gray-200">
                 <div className="flex flex-row items-center gap-3">
                   <img
-                    src={ProfilePicture}
+                    src={ProfilePicture1}
                     alt=""
                     className="rounded-full w-[60px] h-[60px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                   />
@@ -222,7 +223,7 @@ const Message = () => {
               {/* Message Item 1 */}
               <div className="flex items-end gap-3 mb-4">
                 <img
-                  src={ProfilePicture}
+                  src={ProfilePicture1}
                   alt=""
                   className="rounded-full w-[30px] h-[30px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                 />

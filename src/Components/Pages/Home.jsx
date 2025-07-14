@@ -7,50 +7,61 @@ import { AiOutlineMessage } from "react-icons/ai";
 import { IoMdSettings } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Container from "../Layout/Container";
+import ProfilePicture1 from "../../assets/images/ProfilePicture1.jpg";
+import ProfilePicture2 from "../../assets/images/ProfilePicture2.jpeg";
+
 const Home = () => {
   return (
     <Container>
       {/* Sidebar */}
-<div className="w-[120px] bg-black rounded-[20px] flex flex-col justify-between shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)] transition-all duration-300">
-  <div className="h-[150px] w-full flex justify-center items-center">
-    <img
-      className="rounded-full w-18 h-18 object-cover shadow-[0_4px_6px_-1px_rgba(0,0,0,0.2)] hover:scale-105 transition-transform duration-300"
-      src={ProfilePicture}
-      alt="Profile"
-    />
-  </div>
-  <div className="mb-[200px]">
-    {/* Active Home Button */}
-    <div className="group relative mb-3 py-2 flex items-center justify-center cursor-pointer">
-      <div className="absolute inset-y-0 left-[15px] right-0 rounded-l-[20px] bg-white" />
-      <div className="absolute right-0 top-0 h-full w-5 bg-black rounded-tl-[10px] rounded-bl-[10px]" />
-      <GoHome className="relative z-10 text-black h-[40px] w-[40px] transition-all duration-200" />
-    </div>
+      <div className="w-[120px] bg-black rounded-[20px] flex flex-col justify-between shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)] transition-all duration-300">
+        <div className="h-[150px] w-full flex justify-center items-center">
+          <img
+            className="rounded-full w-18 h-18 object-cover shadow-[0_4px_6px_-1px_rgba(0,0,0,0.2)] hover:scale-105 transition-transform duration-300"
+            src={ProfilePicture}
+            alt="Profile"
+          />
+        </div>
+        <div className="mb-[200px]">
+          {/* Active Home Button */}
+          <div className="group relative mb-3 py-2 flex items-center justify-center cursor-pointer">
+            <div className="absolute inset-y-0 left-[15px] right-0 rounded-l-[20px] bg-white" />
+            <div className="absolute right-0 top-0 h-full w-5 bg-black rounded-tl-[10px] rounded-bl-[10px]" />
+            <GoHome className="relative z-10 text-black h-[40px] w-[40px] transition-all duration-200" />
+          </div>
 
-    {/* Messages Button */}
-    <div className="group relative mb-3 py-2 flex items-center justify-center cursor-pointer">
-      <div className="absolute inset-y-0 left-[15px] right-0 rounded-l-[20px] bg-white opacity-0 group-hover:opacity-100 
-                    transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]" />
-      <div className="absolute right-0 top-0 h-full w-5 bg-black rounded-tl-[10px] rounded-bl-[10px] 
-                    opacity-0 group-hover:opacity-100 transition-all duration-200 delay-100" />
-      <AiOutlineMessage className="relative z-10 text-white group-hover:text-black h-[40px] w-[40px] transition-colors duration-200" />
-    </div>
+          {/* Messages Button */}
+          <div className="group relative mb-3 py-2 flex items-center justify-center cursor-pointer">
+            <div
+              className="absolute inset-y-0 left-[15px] right-0 rounded-l-[20px] bg-white opacity-0 group-hover:opacity-100 
+                    transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+            />
+            <div
+              className="absolute right-0 top-0 h-full w-5 bg-black rounded-tl-[10px] rounded-bl-[10px] 
+                    opacity-0 group-hover:opacity-100 transition-all duration-200 delay-100"
+            />
+            <AiOutlineMessage className="relative z-10 text-white group-hover:text-black h-[40px] w-[40px] transition-colors duration-200" />
+          </div>
 
-    {/* Settings Button */}
-    <div className="group relative mb-3 py-2 flex items-center justify-center cursor-pointer">
-      <div className="absolute inset-y-0 left-[15px] right-0 rounded-l-[20px] bg-white opacity-0 group-hover:opacity-100 
-                    transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]" />
-      <div className="absolute right-0 top-0 h-full w-5 bg-black rounded-tl-[10px] rounded-bl-[10px] 
-                    opacity-0 group-hover:opacity-100 transition-all duration-200 delay-100" />
-      <IoMdSettings className="relative z-10 text-white group-hover:text-black h-[40px] w-[40px] transition-all duration-200 group-hover:rotate-45" />
-    </div>
-  </div>
-  <div className="h-[150px] w-full flex justify-center items-center">
-    <div className="p-2 rounded-full hover:bg-white/10 transition-all duration-300">
-      <IoExit className="text-white h-[45px] w-[45px] hover:scale-110 transition-transform duration-300" />
-    </div>
-  </div>
-</div>
+          {/* Settings Button */}
+          <div className="group relative mb-3 py-2 flex items-center justify-center cursor-pointer">
+            <div
+              className="absolute inset-y-0 left-[15px] right-0 rounded-l-[20px] bg-white opacity-0 group-hover:opacity-100 
+                    transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+            />
+            <div
+              className="absolute right-0 top-0 h-full w-5 bg-black rounded-tl-[10px] rounded-bl-[10px] 
+                    opacity-0 group-hover:opacity-100 transition-all duration-200 delay-100"
+            />
+            <IoMdSettings className="relative z-10 text-white group-hover:text-black h-[40px] w-[40px] transition-all duration-200 group-hover:rotate-45" />
+          </div>
+        </div>
+        <div className="h-[150px] w-full flex justify-center items-center">
+          <div className="p-2 rounded-full hover:bg-white/10 transition-all duration-300">
+            <IoExit className="text-white h-[45px] w-[45px] hover:scale-110 transition-transform duration-300" />
+          </div>
+        </div>
+      </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full overflow-hidden gap-4">
@@ -87,7 +98,7 @@ const Home = () => {
                   type="search"
                   id="default-search"
                   className="block w-full p-4 ps-10 text-sm text-gray-900 bg-white rounded-[20px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Search Mockups, Logos..."
+                  placeholder="Search Groups, Friends, Chats..."
                   required
                 />
                 <button
@@ -100,7 +111,7 @@ const Home = () => {
             </form>
 
             <div className="flex-1 min-h-0 overflow-hidden">
-              <div className="h-full bg-white rounded-[20px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] flex flex-col">
+              <div className="h-full bg-white rounded-[20px]  flex flex-col">
                 <div className="flex justify-between items-center px-[22px] pt-[22px]">
                   <h1 className="font-poppins text-[20px] font-[600]">
                     Groups List
@@ -112,7 +123,7 @@ const Home = () => {
                   <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                     <div className="flex items-center gap-3">
                       <img
-                        src={ProfilePicture}
+                        src={ProfilePicture1}
                         alt=""
                         className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                       />
@@ -136,7 +147,7 @@ const Home = () => {
                   <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                     <div className="flex items-center gap-3">
                       <img
-                        src={ProfilePicture}
+                        src={ProfilePicture2}
                         alt=""
                         className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                       />
@@ -160,7 +171,7 @@ const Home = () => {
                   <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                     <div className="flex items-center gap-3">
                       <img
-                        src={ProfilePicture}
+                        src={ProfilePicture1}
                         alt=""
                         className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                       />
@@ -186,7 +197,7 @@ const Home = () => {
 
           {/* Second Column */}
           <div className="flex-1 min-h-0 overflow-hidden">
-            <div className="h-full bg-white rounded-[20px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] flex flex-col">
+            <div className="h-full bg-white rounded-[20px]  flex flex-col">
               <div className="flex justify-between items-center px-[22px] pt-[22px]">
                 <h1 className="font-poppins text-[20px] font-[600]">Friends</h1>
                 <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
@@ -196,7 +207,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture1}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -220,7 +231,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture2}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -244,7 +255,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture1}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -269,7 +280,7 @@ const Home = () => {
 
           {/* Third Column */}
           <div className="flex-1 min-h-0 overflow-hidden">
-            <div className="h-full bg-white rounded-[20px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] flex flex-col">
+            <div className="h-full bg-white rounded-[20px]  flex flex-col">
               <div className="flex justify-between items-center px-[22px] pt-[22px]">
                 <h1 className="font-poppins text-[20px] font-[600]">
                   User List
@@ -281,7 +292,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture2}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -305,7 +316,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture1}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -329,7 +340,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture2}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -357,7 +368,7 @@ const Home = () => {
         <div className="flex-1 min-h-0 flex gap-4">
           {/* First Column */}
           <div className="flex-1 min-h-0 overflow-hidden">
-            <div className="h-full bg-white rounded-[20px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] flex flex-col">
+            <div className="h-full bg-white rounded-[20px]  flex flex-col">
               <div className="flex justify-between items-center px-[22px] pt-[22px]">
                 <h1 className="font-poppins text-[20px] font-[600]">
                   Friends Requests
@@ -368,7 +379,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture1}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -390,7 +401,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture2}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -412,7 +423,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture1}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -438,7 +449,7 @@ const Home = () => {
 
           {/* Second Column */}
           <div className="flex-1 min-h-0 overflow-hidden">
-            <div className="h-full bg-white rounded-[20px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] flex flex-col">
+            <div className="h-full bg-white rounded-[20px]  flex flex-col">
               <div className="flex justify-between items-center px-[22px] pt-[22px]">
                 <h1 className="font-poppins text-[20px] font-[600]">
                   My Groups
@@ -449,7 +460,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture2}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -471,7 +482,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture1}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -497,7 +508,7 @@ const Home = () => {
 
           {/* Third Column */}
           <div className="flex-1 min-h-0 overflow-hidden">
-            <div className="h-full bg-white rounded-[20px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] flex flex-col">
+            <div className="h-full bg-white rounded-[20px] flex flex-col">
               <div className="flex justify-between items-center px-[22px] pt-[22px]">
                 <h1 className="font-poppins text-[20px] font-[600]">
                   Blocked Users
@@ -508,7 +519,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture2}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
@@ -530,7 +541,7 @@ const Home = () => {
                 <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
                   <div className="flex items-center gap-3">
                     <img
-                      src={ProfilePicture}
+                      src={ProfilePicture1}
                       alt=""
                       className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
                     />
