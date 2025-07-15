@@ -1,10 +1,5 @@
 import { BiPlus } from "react-icons/bi";
 import React, { useEffect, useState } from "react";
-import ProfilePicture from "../../assets/images/ProfilePicture.jpg";
-import { GoHome } from "react-icons/go";
-import { IoExit } from "react-icons/io5";
-import { AiOutlineMessage } from "react-icons/ai";
-import { IoMdSettings } from "react-icons/io";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Container from "../Layout/Container";
 import ProfilePicture1 from "../../assets/images/ProfilePicture1.jpg";
@@ -12,6 +7,7 @@ import ProfilePicture2 from "../../assets/images/ProfilePicture2.jpeg";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import Sidebar from "../common/Sidebar";
 
 const Home = () => {
   const data = useSelector((state) => state.userLogInfo.value);
@@ -38,76 +34,12 @@ const Home = () => {
     return null;
   }
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/Login");
-
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-      })
-      .catch((error) => {
-        // An error happened.
-      });
-  };
-
   return (
     <>
       {verify ? (
         <Container>
           {/* Sidebar */}
-          <div className="w-[120px] bg-black rounded-[20px] flex flex-col justify-between shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)] transition-all duration-300">
-            <div className="h-[150px] w-full flex justify-center items-center">
-              <img
-                className="rounded-full w-18 h-18 object-cover shadow-[0_4px_6px_-1px_rgba(0,0,0,0.2)] hover:scale-105 transition-transform duration-300"
-                src={ProfilePicture}
-                alt="Profile"
-              />
-            </div>
-            <div className="mb-[200px]">
-              {/* Active Home Button */}
-              <div className="group relative mb-3 py-2 flex items-center justify-center cursor-pointer">
-                <div className="absolute inset-y-0 left-[15px] right-0 rounded-l-[20px] bg-white" />
-                <div className="absolute right-0 top-0 h-full w-5 bg-black rounded-tl-[10px] rounded-bl-[10px]" />
-                <GoHome className="relative z-10 text-black h-[40px] w-[40px] transition-all duration-200" />
-              </div>
-
-              {/* Messages Button */}
-              <div className="group relative mb-3 py-2 flex items-center justify-center cursor-pointer">
-                <div
-                  className="absolute inset-y-0 left-[15px] right-0 rounded-l-[20px] bg-white opacity-0 group-hover:opacity-100 
-                    transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
-                />
-                <div
-                  className="absolute right-0 top-0 h-full w-5 bg-black rounded-tl-[10px] rounded-bl-[10px] 
-                    opacity-0 group-hover:opacity-100 transition-all duration-200 delay-100"
-                />
-                <AiOutlineMessage className="relative z-10 text-white group-hover:text-black h-[40px] w-[40px] transition-colors duration-200" />
-              </div>
-
-              {/* Settings Button */}
-              <div className="group relative mb-3 py-2 flex items-center justify-center cursor-pointer">
-                <div
-                  className="absolute inset-y-0 left-[15px] right-0 rounded-l-[20px] bg-white opacity-0 group-hover:opacity-100 
-                    transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
-                />
-                <div
-                  className="absolute right-0 top-0 h-full w-5 bg-black rounded-tl-[10px] rounded-bl-[10px] 
-                    opacity-0 group-hover:opacity-100 transition-all duration-200 delay-100"
-                />
-                <IoMdSettings className="relative z-10 text-white group-hover:text-black h-[40px] w-[40px] transition-all duration-200 group-hover:rotate-45" />
-              </div>
-            </div>
-            <div className="h-[150px] w-full flex justify-center items-center">
-              <div
-                onClick={handleLogout}
-                className="p-2 rounded-full hover:bg-white/10 transition-all duration-300"
-              >
-                <IoExit className="text-white h-[45px] w-[45px] hover:scale-110 transition-transform duration-300" />
-              </div>
-            </div>
-          </div>
-
+          <Sidebar activeItem="Home" />
           {/* Main Content */}
           <div className="flex-1 flex flex-col h-full overflow-hidden gap-4">
             {/* Top Row */}
@@ -615,7 +547,9 @@ const Home = () => {
           </div>
         </Container>
       ) : (
-        <p>Please verify your email first</p>
+        toast.error("Please verify your email first") || (
+          <p>Please verify your email first</p>
+        )
       )}
     </>
   );
