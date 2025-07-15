@@ -7,8 +7,9 @@ import { IoMdSettings } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { getAuth, signOut } from "firebase/auth";
 import LoadingBar from "react-top-loading-bar";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import { userLogInfo } from "../../slice/userSlice";
+import { useDispatch } from "react-redux";
 
 const SidebarItem = ({
   icon: Icon,
@@ -61,15 +62,31 @@ const Sidebar = ({ activeItem = "Home" }) => {
   const navigate = useNavigate();
   const auth = getAuth();
   const loadingBarRef = useRef(null);
+  const dispatch = useDispatch();
 
   const handleLogout = async () => {
     try {
+      // Immediately start loading
       loadingBarRef.current.continuousStart();
+
+      // Sign out from Firebase
       await signOut(auth);
-      loadingBarRef.current.complete();
-      toast.success("Logged out successfully!");
-      navigate("/login");
+
+      // Complete 40% of loading bar
+
+      // Show success toast
+      toast.success("Logged out successfully!", {
+        autoClose: 1000,
+        onClose: () => {
+          // After toast closes (1000ms), complete loading and navigate
+          dispatch(userLogInfo(null));
+          localStorage.clear();
+          loadingBarRef.current.complete();
+          navigate("/login");
+        },
+      });
     } catch (error) {
+      // Error handling
       loadingBarRef.current.complete();
       toast.error(`Logout failed: ${error.message}`);
       console.error("Logout error:", error);
@@ -86,12 +103,18 @@ const Sidebar = ({ activeItem = "Home" }) => {
 
   return (
     <>
-      <LoadingBar
-        color="#000"
-        ref={loadingBarRef}
-        height={4}
-        shadow={true}
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+        theme="light"
       />
+      <LoadingBar color="#000" ref={loadingBarRef} height={4} shadow={true} />
       <div className="w-[120px] bg-black rounded-[20px] flex flex-col justify-between shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)] transition-all duration-300">
         <div className="h-[150px] w-full flex justify-center items-center">
           <img
