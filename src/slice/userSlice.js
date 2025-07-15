@@ -1,18 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  value: localStorage.getItem("userLoginInfo")
+    ? JSON.parse(localStorage.getItem("userLoginInfo"))
+    : null,
+};
+
 export const userSlice = createSlice({
   name: "user",
-  initialState: {
-    value: 0,
-  },
+  initialState,
   reducers: {
-    userLoginInfo: (state, action) => {
-      console.log(state);
+    userLogInfo: (state, action) => {
+      state.value = action.payload;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { userLoginInfo } = userSlice.actions;
+export const { userLogInfo } = userSlice.actions;
 
 export default userSlice.reducer;
