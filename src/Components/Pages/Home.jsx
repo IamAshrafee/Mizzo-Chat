@@ -1,66 +1,34 @@
-import { BiPlus } from "react-icons/bi";
-import React, { useEffect, useRef, useState } from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import React, { useState, useEffect, useRef } from "react";
 import Container from "../Layout/Container";
-
-// Importing sample profile images
-import ProfilePicture1 from "../../assets/images/ProfilePicture1.jpg";
-import ProfilePicture2 from "../../assets/images/ProfilePicture2.jpeg";
-
-// Getting user data from redux
-import { useDispatch, useSelector } from "react-redux";
-
-import { useNavigate } from "react-router";
-
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-
 import Sidebar from "../common/Sidebar";
-
-// Firebase real-time database functions
-import { getDatabase, ref, onValue } from "firebase/database";
-
-// Email verification message component
 import VerifyEmailMessage from "../common/VerifyEmailMessage";
-
-// Toast message and loading bar
 import { ToastContainer, toast } from "react-toastify";
 import LoadingBar from "react-top-loading-bar";
-import { userLogInfo } from "../../slice/userSlice";
+import FriendRequest from "../pageComponents/Home/FriendRequest";
+import GroupsList from "../pageComponents/Home/GroupsList";
+import MyGroups from "../pageComponents/Home/MyGroups";
+import Friends from "../pageComponents/Home/Friends";
+import UserList from "../pageComponents/Home/UserList";
+import BlockedUser from "../pageComponents/Home/BlockedUser";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 
 // Main Home component
 const Home = () => {
-  // List of users from database
-  const [userList, setUserList] = useState([]);
-
-  // Getting user data from redux
+  const loadingBarRef = useRef(null);
+  const [verify, setVerify] = useState(false);
+  const [loading, setLoading] = useState(true);
   const data = useSelector((state) => state.userLogInfo.value);
-
-  // For navigating programmatically
   const navigate = useNavigate();
-
-  // Firebase auth instance
   const auth = getAuth();
 
-  // Firebase database instance
-  const db = getDatabase();
-
-  // Ref for loading bar (not used now but kept for later use)
-  const loadingBarRef = useRef(null);
-
-  // For checking if email is verified
-  const [verify, setVerify] = useState(false);
-
-  // To check if data is loading
-  const [loading, setLoading] = useState(true);
-
-  // Redirect to login page if no user is logged in
   useEffect(() => {
     if (!data) {
       navigate("/Login");
     }
   }, [data, navigate]);
 
-  // Check if user's email is verified
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user?.emailVerified) {
@@ -69,37 +37,15 @@ const Home = () => {
       setLoading(false);
     });
 
-    // Clean up when component unmounts
     return () => unsubscribe();
   }, [auth]);
 
-  // Show error if email is not verified
   useEffect(() => {
     if (!loading && !verify) {
       toast.error("Please verify your email first");
     }
   }, [loading, verify]);
 
-  // Fetch all users from the Firebase database
-  useEffect(() => {
-    const userRef = ref(db, "users/");
-    const arr = [];
-
-    const unsubscribe = onValue(userRef, (snapshot) => {
-      arr.length = 0; // clear previous data
-      snapshot.forEach((item) => {
-        arr.push(item.val());
-      });
-      setUserList(arr);
-    });
-
-    // Clean up listener
-    return () => unsubscribe();
-  }, [db]);
-
-  console.log(userList); // moved here to show updated data
-
-  const dispatch = useDispatch;
   // If still loading, show a simple loading text
   if (loading) {
     return <p></p>;
@@ -180,429 +126,26 @@ const Home = () => {
                 </div>
               </form>
 
-              <div className="flex-1 min-h-0 overflow-hidden">
-                <div className="h-full bg-white rounded-[20px]  flex flex-col">
-                  <div className="flex justify-between items-center px-[22px] pt-[22px]">
-                    <h1 className="font-poppins text-[20px] font-[600]">
-                      Groups List
-                    </h1>
-
-                    <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
-                  </div>
-                  <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
-                    {/* Friend Item 1 */}
-                    <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={ProfilePicture1}
-                          alt=""
-                          className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                        />
-                        <div className="flex flex-col">
-                          <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                            John Doe
-                          </p>
-                          <p className="text-primary-des font-poppins text-[12px] font-medium">
-                            Dinner?
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
-                          Join
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Friend Item 2 */}
-                    <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={ProfilePicture2}
-                          alt=""
-                          className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                        />
-                        <div className="flex flex-col">
-                          <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                            Sarah Smith
-                          </p>
-                          <p className="text-primary-des font-poppins text-[12px] font-medium">
-                            Movie night?
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
-                          Join
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Friend Item 3 */}
-                    <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={ProfilePicture1}
-                          alt=""
-                          className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                        />
-                        <div className="flex flex-col">
-                          <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                            Michael Johnson
-                          </p>
-                          <p className="text-primary-des font-poppins text-[12px] font-medium">
-                            Weekend plans?
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
-                          Join
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <GroupsList />
             </div>
 
             {/* Second Column */}
-            <div className="flex-1 min-h-0 overflow-hidden">
-              <div className="h-full bg-white rounded-[20px]  flex flex-col">
-                <div className="flex justify-between items-center px-[22px] pt-[22px]">
-                  <h1 className="font-poppins text-[20px] font-[600]">
-                    Friends
-                  </h1>
-                  <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
-                </div>
-                <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
-                  {/* Friend Item 1 */}
-                  <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={ProfilePicture1}
-                        alt=""
-                        className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                      />
-                      <div className="flex flex-col">
-                        <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                          Emily Wilson
-                        </p>
-                        <p className="text-primary-des font-poppins text-[12px] font-medium">
-                          Coffee tomorrow?
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                        Today, 5:20pm
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Friend Item 2 */}
-                  <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={ProfilePicture2}
-                        alt=""
-                        className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                      />
-                      <div className="flex flex-col">
-                        <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                          David Brown
-                        </p>
-                        <p className="text-primary-des font-poppins text-[12px] font-medium">
-                          Project update
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                        Today, 4:15pm
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Friend Item 3 */}
-                  <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={ProfilePicture1}
-                        alt=""
-                        className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                      />
-                      <div className="flex flex-col">
-                        <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                          Jessica Lee
-                        </p>
-                        <p className="text-primary-des font-poppins text-[12px] font-medium">
-                          Birthday party
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                        Today, 3:30pm
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Friends />
 
             {/* Third Column */}
-            <div className="flex-1 min-h-0 overflow-hidden">
-              <div className="h-full bg-white rounded-[20px]  flex flex-col">
-                <div className="flex justify-between items-center px-[22px] pt-[22px]">
-                  <h1 className="font-poppins text-[20px] font-[600]">
-                    User List
-                  </h1>
-                  <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
-                </div>
-                <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
-                  {
-                    // Loop through each user item in userList
-                    userList.map((item, index) => {
-                      return (
-                        // Each item must be wrapped in a return (JSX block)
-                        <div
-                          key={index} // Always use a unique key when mapping
-                          className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]"
-                        >
-                          {/* Left side: profile image and user info */}
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={ProfilePicture2} // Use dynamic item image if available
-                              alt=""
-                              className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                            />
-                            <div className="flex flex-col">
-                              <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                                {item.username || "Unknown User"}{" "}
-                                {/* Show user name */}
-                              </p>
-                              <p className="text-primary-des font-poppins text-[12px] font-medium">
-                                {item.email || "No email"} {/* Show email */}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Right side: action button */}
-                          <div>
-                            <button className="px-3 p-2 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
-                              <BiPlus className="text-white" />
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })
-                  }
-                </div>
-              </div>
-            </div>
+            <UserList />
           </div>
 
           {/* Bottom Row */}
           <div className="flex-1 min-h-0 flex gap-4">
             {/* First Column */}
-            <div className="flex-1 min-h-0 overflow-hidden">
-              <div className="h-full bg-white rounded-[20px]  flex flex-col">
-                <div className="flex justify-between items-center px-[22px] pt-[22px]">
-                  <h1 className="font-poppins text-[20px] font-[600]">
-                    Friends Requests
-                  </h1>
-                  <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
-                </div>
-                <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
-                  <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={ProfilePicture1}
-                        alt=""
-                        className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                      />
-                      <div className="flex flex-col">
-                        <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                          John Doe
-                        </p>
-                        <p className="text-primary-des font-poppins text-[12px] font-medium">
-                          Dinner?
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
-                        Accept
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={ProfilePicture2}
-                        alt=""
-                        className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                      />
-                      <div className="flex flex-col">
-                        <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                          John Doe
-                        </p>
-                        <p className="text-primary-des font-poppins text-[12px] font-medium">
-                          Dinner?
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
-                        Accept
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={ProfilePicture1}
-                        alt=""
-                        className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                      />
-                      <div className="flex flex-col">
-                        <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                          John Doe
-                        </p>
-                        <p className="text-primary-des font-poppins text-[12px] font-medium">
-                          Dinner?
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
-                        Accept
-                      </button>
-                    </div>
-                  </div>
-                  {/* Add more friend items as needed */}
-                </div>
-              </div>
-            </div>
+            <FriendRequest />
 
             {/* Second Column */}
-            <div className="flex-1 min-h-0 overflow-hidden">
-              <div className="h-full bg-white rounded-[20px]  flex flex-col">
-                <div className="flex justify-between items-center px-[22px] pt-[22px]">
-                  <h1 className="font-poppins text-[20px] font-[600]">
-                    My Groups
-                  </h1>
-                  <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
-                </div>
-                <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
-                  <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={ProfilePicture2}
-                        alt=""
-                        className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                      />
-                      <div className="flex flex-col">
-                        <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                          John Doe
-                        </p>
-                        <p className="text-primary-des font-poppins text-[12px] font-medium">
-                          Dinner?
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                        Today, 8:56pm
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={ProfilePicture1}
-                        alt=""
-                        className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                      />
-                      <div className="flex flex-col">
-                        <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                          John Doe
-                        </p>
-                        <p className="text-primary-des font-poppins text-[12px] font-medium">
-                          Dinner?
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-primary-opacity font-poppins text-[10px] font-medium">
-                        Today, 8:56pm
-                      </p>
-                    </div>
-                  </div>
-                  {/* Add more friend items as needed */}
-                </div>
-              </div>
-            </div>
+            <MyGroups />
 
             {/* Third Column */}
-            <div className="flex-1 min-h-0 overflow-hidden">
-              <div className="h-full bg-white rounded-[20px] flex flex-col">
-                <div className="flex justify-between items-center px-[22px] pt-[22px]">
-                  <h1 className="font-poppins text-[20px] font-[600]">
-                    Blocked Users
-                  </h1>
-                  <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
-                </div>
-                <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
-                  <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={ProfilePicture2}
-                        alt=""
-                        className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                      />
-                      <div className="flex flex-col">
-                        <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                          John Doe
-                        </p>
-                        <p className="text-primary-des font-poppins text-[12px] font-medium">
-                          Dinner?
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
-                        Unblock
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={ProfilePicture1}
-                        alt=""
-                        className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                      />
-                      <div className="flex flex-col">
-                        <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                          John Doe
-                        </p>
-                        <p className="text-primary-des font-poppins text-[12px] font-medium">
-                          Dinner?
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <button className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
-                        Unblock
-                      </button>
-                    </div>
-                  </div>
-                  {/* Add more friend items as needed */}
-                </div>
-              </div>
-            </div>
+            <BlockedUser />
           </div>
         </div>
       </Container>
