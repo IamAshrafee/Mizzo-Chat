@@ -6,11 +6,13 @@ import { FaEye } from "react-icons/fa";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import LoadingBar from "react-top-loading-bar";
+import { getDatabase, ref, set } from "firebase/database";
 
 const Registration = () => {
   const auth = getAuth();
   const navigate = useNavigate();
   const loadingBarRef = useRef(null); // Create a ref for the loading bar
+  const db = getDatabase();
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -78,13 +80,15 @@ const Registration = () => {
 
     // If we get here, all validations passed
     createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        loadingBarRef.current.complete(); // Complete loading on success
+      .then((user) => {
+        set(ref(db, "users/" + user.user.uid), {
+          username: name,
+          email: email,
+        });
         setEmail("");
         setName("");
         setPassword("");
         toast.success("Registration successful");
-        loadingBarRef.current.start();
         setTimeout(() => {
           navigate("/Login");
           loadingBarRef.current.complete(); // Complete loading after navigation

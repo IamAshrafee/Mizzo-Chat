@@ -33,12 +33,10 @@ const Login = () => {
 
   const [showForgetPass, setShowForgetPass] = useState(false);
   const handleGoogleSignIn = () => {
-    // Start loading bar
     loadingBarRef.current.staticStart();
 
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
 
@@ -46,14 +44,9 @@ const Login = () => {
         const user = result.user;
 
         console.log("Google Sign-In Successful", { user, token });
-
-        // Show success message
         toast.success("Google login successful");
 
-        // Complete loading bar
         loadingBarRef.current.complete();
-
-        // Navigate to home after a short delay
         setTimeout(() => {
           navigate("/Home");
         }, 1500);

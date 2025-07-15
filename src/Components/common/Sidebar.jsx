@@ -103,18 +103,6 @@ const Sidebar = ({ activeItem = "Home" }) => {
 
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover={false}
-        theme="light"
-      />
-      <LoadingBar color="#000" ref={loadingBarRef} height={4} shadow={true} />
       <div className="w-[120px] bg-black rounded-[20px] flex flex-col justify-between shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)] transition-all duration-300">
         <div className="h-[150px] w-full flex justify-center items-center">
           <img
@@ -125,6 +113,23 @@ const Sidebar = ({ activeItem = "Home" }) => {
         </div>
 
         <div className="mb-[200px]">
+          <ToastContainer
+            position="top-center"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover={false}
+            theme="light"
+          />
+          <LoadingBar
+            color="#000"
+            ref={loadingBarRef}
+            height={4}
+            shadow={true}
+          />
           <SidebarItem
             icon={GoHome}
             active={activeItem === "Home"}
