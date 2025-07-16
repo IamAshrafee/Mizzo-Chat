@@ -9,7 +9,7 @@ import { getAuth, signOut } from "firebase/auth";
 import LoadingBar from "react-top-loading-bar";
 import { ToastContainer, toast } from "react-toastify";
 import { userLogInfo } from "../../slice/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const SidebarItem = ({
   icon: Icon,
@@ -63,6 +63,7 @@ const Sidebar = ({ activeItem = "Home" }) => {
   const auth = getAuth();
   const loadingBarRef = useRef(null);
   const dispatch = useDispatch();
+  const data = useSelector((state) => state.userLogInfo.value);
 
   const handleLogout = async () => {
     try {
@@ -104,12 +105,15 @@ const Sidebar = ({ activeItem = "Home" }) => {
   return (
     <>
       <div className="w-[120px] bg-black rounded-[20px] flex flex-col justify-between shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)] transition-all duration-300">
-        <div className="h-[150px] w-full flex justify-center items-center">
+        <div className="h-[150px] w-full flex flex-col justify-center items-center">
           <img
             className="rounded-full w-18 h-18 object-cover shadow-[0_4px_6px_-1px_rgba(0,0,0,0.2)] hover:scale-105 transition-transform duration-300"
             src={ProfilePicture}
             alt="User profile"
           />
+          <p className="text-gray-600 text-[12px] mt-3 text-center">
+            {data.user.displayName}
+          </p>
         </div>
 
         <div className="mb-[200px]">

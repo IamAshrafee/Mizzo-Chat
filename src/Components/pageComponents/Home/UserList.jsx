@@ -1,25 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set } from "firebase/database";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
 import { BiPlus } from "react-icons/bi";
+import { useSelector } from "react-redux";
 
 const UserList = () => {
   const [userList, setUserList] = useState([]);
   const db = getDatabase();
+  const data = useSelector((state) => state.userLogInfo.value);
+
+  console.log(data.user);
 
   useEffect(() => {
     const userRef = ref(db, "users/");
     const unsubscribe = onValue(userRef, (snapshot) => {
       const arr = [];
       snapshot.forEach((item) => {
-        arr.push(item.val());
+        if (data.user.uid !== item.key) {
+          arr.push({ ...item.val(), userUid: item.key });
+        }
       });
       setUserList(arr);
     });
 
     return () => unsubscribe();
   }, [db]);
+
+  const handleFriendRequest = (item) => {
+    set(ref(db, "FriendRequest/"), {
+      senderUid: data.user.uid,
+      senderName: data.user.displayName,
+      receiverUid: item.key,
+      receiverName: item.username,
+    });
+  };
 
   return (
     <div className="flex-1 min-h-0 overflow-hidden">
@@ -50,7 +65,10 @@ const UserList = () => {
                 </div>
               </div>
               <div>
-                <button className="px-3 p-2 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal">
+                <button
+                  onClick={() => handleFriendRequest(item)}
+                  className="px-3 p-2 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal"
+                >
                   <BiPlus className="text-white" />
                 </button>
               </div>

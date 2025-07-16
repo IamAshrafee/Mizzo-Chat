@@ -14,7 +14,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ForgetPass from "../Popup/ForgetPass";
 import { AnimatePresence } from "framer-motion";
 import { useDispatch } from "react-redux";
-import  {userLogInfo}  from "../../slice/userSlice";
+import { userLogInfo } from "../../slice/userSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -138,7 +138,7 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((user) => {
         console.log(user);
-        dispatch(userLogInfo(user))
+        dispatch(userLogInfo(user));
         localStorage.setItem("userLoginInfo", JSON.stringify(user));
         setEmail("");
         setPassword("");

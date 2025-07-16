@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router"; // Fixed import from "react-ro
 import RegistrationBanner from "../../assets/images/RegistrationBanner.png";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import LoadingBar from "react-top-loading-bar";
 import { getDatabase, ref, set } from "firebase/database";
@@ -15,7 +15,7 @@ const Registration = () => {
   const db = getDatabase();
 
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [fullName, setName] = useState("");
   const [password, setPassword] = useState("");
 
   const [emailError, setEmailError] = useState("");
@@ -67,7 +67,7 @@ const Registration = () => {
     }
 
     // Name validation
-    if (!name) {
+    if (!fullName) {
       setNameError("Name is required");
       isValid = false;
     }
@@ -81,9 +81,12 @@ const Registration = () => {
     // If we get here, all validations passed
     createUserWithEmailAndPassword(auth, email, password)
       .then((user) => {
+        updateProfile(auth.currentUser, {
+          displayName: fullName,
+        });
         set(ref(db, "users/" + user.user.uid), {
-          username: name,
-          email: email,
+          username: fullName,
+          email: user.user.email,
         });
         setEmail("");
         setName("");
@@ -189,7 +192,7 @@ const Registration = () => {
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-[8px] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                       placeholder="example@gmail.com"
                       required
-                      value={name}
+                      value={fullName}
                     />
                   </div>
                 ) : (
@@ -206,7 +209,7 @@ const Registration = () => {
                       id="fullname"
                       className="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-base rounded-[8px] focus:ring-red-500 focus:border-red-500 block w-full p-2.5 "
                       placeholder="John doe"
-                      value={name}
+                      value={fullName}
                     />
                   </div>
                 )}
