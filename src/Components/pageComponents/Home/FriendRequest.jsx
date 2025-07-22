@@ -3,7 +3,14 @@ import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ProfilePicture1 from "../../../assets/images/ProfilePicture1.jpg";
 import ProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
-import { getDatabase, onValue, ref } from "firebase/database";
+import {
+  getDatabase,
+  onValue,
+  ref,
+  set,
+  remove,
+  push,
+} from "firebase/database";
 import { Toaster, toast } from "sonner";
 import { useSelector } from "react-redux";
 
@@ -19,12 +26,23 @@ const FriendRequest = () => {
       const arr = [];
       snapshot.forEach((item) => {
         if (data.user.uid === item.val().receiverUid) {
-          arr.push(item.val());
+          arr.push({ ...item.val(), key: item.key });
         }
       });
       setFriendRequestList(arr);
     });
   }, []);
+
+  const handleAcceptRequest = (item) => {
+    set(push(ref(db, "friends")), {
+      ...item,
+    }).then(() => {
+      remove(ref(db, "FriendRequest/" + item.key)).then(() => {
+        toast.success("Friend request accepted");
+      });
+    });
+  };
+
 
   const formatTimestamp = (timestamp) => {
     const now = new Date();
@@ -68,9 +86,8 @@ const FriendRequest = () => {
           </div>
           <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
             <AnimatePresence>
-              {FriendRequestList.map((item, index) => (
+              {FriendRequestList.map((item) => (
                 <motion.div
-                  key={index}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -97,9 +114,7 @@ const FriendRequest = () => {
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.5 }}
-                      onClick={() => {
-                        toast.success("The Friend Request Has Been Accepted");
-                      }}
+                      onClick={() => handleAcceptRequest(item)}
                       className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal"
                     >
                       Accept

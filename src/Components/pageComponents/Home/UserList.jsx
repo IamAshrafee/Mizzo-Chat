@@ -12,11 +12,12 @@ const UserList = () => {
   const db = getDatabase();
   const data = useSelector((state) => state.userLogInfo.value);
 
-  const [FriendRequestList, setFriendRequestList] = useState([]);
+  const [friendRequestList, setFriendRequestList] = useState([]);
+  const [friendsList, setFriendsList] = useState([]);
 
   useEffect(() => {
-    const FriendRequestRef = ref(db, "FriendRequest/");
-    onValue(FriendRequestRef, (snapshot) => {
+    const friendRequestRef = ref(db, "FriendRequest/");
+    onValue(friendRequestRef, (snapshot) => {
       const arr = [];
       snapshot.forEach((item) => {
         arr.push({
@@ -27,7 +28,21 @@ const UserList = () => {
       });
       setFriendRequestList(arr);
     });
-  }, []);
+
+    const friendsRef = ref(db, "friends/");
+    onValue(friendsRef, (snapshot) => {
+      const list = [];
+      snapshot.forEach((item) => {
+        const friendData = item.val();
+        if (friendData.receiverUid === data.user.uid) {
+          list.push(friendData.senderUid);
+        } else if (friendData.senderUid === data.user.uid) {
+          list.push(friendData.receiverUid);
+        }
+      });
+      setFriendsList(list);
+    });
+  }, [data.user.uid, db]);
 
   useEffect(() => {
     const userRef = ref(db, "users/");
@@ -40,7 +55,7 @@ const UserList = () => {
       });
       setUserList(arr);
     });
-  }, []);
+  }, [data.user.uid]);
 
   const handleFriendRequest = (item) => {
     toast.success("Friend request has been sent!");
@@ -54,7 +69,7 @@ const UserList = () => {
   };
 
   const handleCancelRequest = (item) => {
-    const request = FriendRequestList.find(
+    const request = friendRequestList.find(
       (fr) =>
         (fr.senderUid === data.user.uid && fr.receiverUid === item.userUid) ||
         (fr.senderUid === item.userUid && fr.receiverUid === data.user.uid)
@@ -103,13 +118,22 @@ const UserList = () => {
                 </div>
                 <div>
                   <AnimatePresence mode="wait">
-                    {FriendRequestList.some(
-                      (fr) =>
-                        (fr.senderUid === data.user.uid &&
-                          fr.receiverUid === item.userUid) ||
-                        (fr.senderUid === item.userUid &&
-                          fr.receiverUid === data.user.uid)
-                    ) ? (
+                    {friendsList.includes(item.userUid) ? (
+                      <motion.p
+                        key="friend"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="font-poppins text-[14px] text-gray-500"
+                      >
+                        Friend
+                      </motion.p>
+                    ) : friendRequestList.some(
+                        (fr) =>
+                          (fr.senderUid === data.user.uid &&
+                            fr.receiverUid === item.userUid) ||
+                          (fr.senderUid === item.userUid &&
+                            fr.receiverUid === data.user.uid)
+                      ) ? (
                       <motion.button
                         key="cancel"
                         initial={{ opacity: 0, scale: 0.6 }}
