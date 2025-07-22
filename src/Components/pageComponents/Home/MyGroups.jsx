@@ -34,45 +34,47 @@ const MyGroups = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="flex-1 overflow-y-auto px-[22px] pb-[22px] font-poppins text-[14px] flex flex-col justify-center items-center gap-2.5"
+              className="flex-1 overflow-y-auto px-[22px] pb-[22px] font-poppins text-[14px]"
             >
-              <div>
-                <p className="text-[18px] text-center border-b border-b-gray-200 pb-2.5 px-2.5">
-                  Create a new group!
-                </p>
-              </div>
-              <div className="flex flex-col w-[90%]">
-                <label htmlFor="groupName" className="text-gray-800 mb-1">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  className="mb-2.5 border border-gray-200 rounded-lg text-[16px] px-1.5 py-1.5 focus:outline-gray-300 font-poppins"
-                />
-                <label
-                  htmlFor="groupDescription"
-                  className="text-gray-800 mb-1"
-                >
-                  Description
-                </label>
-                <textarea
-                  rows="3"
-                  className="mb-2.5 border border-gray-200 rounded-lg text-[16px] px-1.5 py-1.5 focus:outline-gray-300 font-poppins resize-none"
-                ></textarea>
-              </div>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setShowCreateGroup(false)}
-                  className="flex cursor-pointer text-[14px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1.5 px-4 rounded-lg font-medium text-gray-900"
-                >
-                  Create Now
-                </button>
-                <button
-                  onClick={() => setShowCreateGroup(false)}
-                  className="flex cursor-pointer text-[14px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1.5 px-4 rounded-lg font-medium text-gray-900"
-                >
-                  Cancel
-                </button>
+              <div className="flex flex-col justify-center items-center gap-2.5">
+                <div>
+                  <p className="text-[18px] text-center border-b border-b-gray-200 pb-2.5 px-2.5 mt-2.5">
+                    Create a new group!
+                  </p>
+                </div>
+                <div className="flex flex-col w-[90%]">
+                  <label htmlFor="groupName" className="text-gray-800 mb-1">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    className="mb-2.5 border border-gray-200 rounded-lg text-[16px] px-1.5 py-1.5 focus:outline-gray-300 font-poppins"
+                  />
+                  <label
+                    htmlFor="groupDescription"
+                    className="text-gray-800 mb-1"
+                  >
+                    Description
+                  </label>
+                  <textarea
+                    rows="3"
+                    className="mb-2.5 border border-gray-200 rounded-lg text-[16px] px-1.5 py-1.5 focus:outline-gray-300 font-poppins resize-none"
+                  ></textarea>
+                </div>
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => setShowCreateGroup(false)}
+                    className="flex cursor-pointer text-[14px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1.5 px-4 rounded-lg font-medium text-gray-900"
+                  >
+                    Create Now
+                  </button>
+                  <button
+                    onClick={() => setShowCreateGroup(false)}
+                    className="flex cursor-pointer text-[14px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1.5 px-4 rounded-lg font-medium text-gray-900"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             </motion.div>
           ) : (
