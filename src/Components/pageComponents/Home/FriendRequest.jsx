@@ -43,7 +43,6 @@ const FriendRequest = () => {
     });
   };
 
-
   const formatTimestamp = (timestamp) => {
     const now = new Date();
     const sentDate = new Date(timestamp);

@@ -3,7 +3,12 @@ import { Link, useNavigate } from "react-router"; // Fixed import from "react-ro
 import RegistrationBanner from "../../assets/images/RegistrationBanner.png";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
-import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
+} from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import LoadingBar from "react-top-loading-bar";
 import { getDatabase, ref, set } from "firebase/database";
@@ -81,8 +86,7 @@ const Registration = () => {
     // If we get here, all validations passed
     createUserWithEmailAndPassword(auth, email, password)
       .then((user) => {
-        sendEmailVerification(auth.currentUser)
-        .then(() => {
+        sendEmailVerification(auth.currentUser).then(() => {
           updateProfile(auth.currentUser, {
             displayName: fullName,
           });
@@ -98,7 +102,7 @@ const Registration = () => {
             navigate("/Login");
             loadingBarRef.current.complete(); // Complete loading after navigation
           }, 2500);
-        })
+        });
       })
       .catch((error) => {
         loadingBarRef.current.complete(); // Complete loading on error

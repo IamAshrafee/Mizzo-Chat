@@ -1,6 +1,13 @@
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useEffect } from "react";
-import { getDatabase, ref, onValue, remove, set, push } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  remove,
+  set,
+  push,
+} from "firebase/database";
 import { useSelector } from "react-redux";
 import ProfilePicture1 from "../../../assets/images/ProfilePicture1.jpg";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -38,8 +45,12 @@ const Friends = () => {
   const handleBlock = (item) => {
     const blockedUser = {
       blockerUid: data.user.uid,
-      blockedUid: item.receiverUid === data.user.uid ? item.senderUid : item.receiverUid,
-      blockedName: item.receiverUid === data.user.uid ? item.senderName : item.receiverName,
+      blockedUid:
+        item.receiverUid === data.user.uid ? item.senderUid : item.receiverUid,
+      blockedName:
+        item.receiverUid === data.user.uid
+          ? item.senderName
+          : item.receiverName,
     };
 
     set(push(ref(db, "blocked/")), blockedUser).then(() => {

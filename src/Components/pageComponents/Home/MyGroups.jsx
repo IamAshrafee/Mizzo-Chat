@@ -3,7 +3,14 @@ import { MdOutlineCreateNewFolder } from "react-icons/md";
 import React, { useState, useEffect } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
-import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  set,
+  push,
+  remove,
+} from "firebase/database";
 import { useSelector } from "react-redux";
 import { toast, Toaster } from "sonner";
 

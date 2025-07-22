@@ -1,9 +1,16 @@
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useEffect } from "react";
-import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  set,
+  push,
+  remove,
+} from "firebase/database";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
-import { BiMinus, BiPlus } from "react-icons/bi";
+import { BiPlus } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { Toaster, toast } from "sonner";
 
@@ -14,6 +21,7 @@ const UserList = () => {
 
   const [friendRequestList, setFriendRequestList] = useState([]);
   const [friendsList, setFriendsList] = useState([]);
+  const [blockedList, setBlockedList] = useState([]);
 
   useEffect(() => {
     const friendRequestRef = ref(db, "FriendRequest/");
@@ -42,6 +50,17 @@ const UserList = () => {
       });
       setFriendsList(list);
     });
+
+    const blockedRef = ref(db, "blocked/");
+    onValue(blockedRef, (snapshot) => {
+      const list = [];
+      snapshot.forEach((item) => {
+        const blockedData = item.val();
+        list.push(blockedData.blockerUid);
+        list.push(blockedData.blockedUid);
+      });
+      setBlockedList(list);
+    });
   }, [data.user.uid, db]);
 
   useEffect(() => {
@@ -49,13 +68,17 @@ const UserList = () => {
     onValue(userRef, (snapshot) => {
       const arr = [];
       snapshot.forEach((item) => {
-        if (data.user.uid !== item.key) {
+        if (
+          data.user.uid !== item.key &&
+          !friendsList.includes(item.key) &&
+          !blockedList.includes(item.key)
+        ) {
           arr.push({ ...item.val(), userUid: item.key });
         }
       });
       setUserList(arr);
     });
-  }, [data.user.uid]);
+  }, [data.user.uid, friendsList, blockedList]);
 
   const handleFriendRequest = (item) => {
     toast.success("Friend request has been sent!");
@@ -118,22 +141,13 @@ const UserList = () => {
                 </div>
                 <div>
                   <AnimatePresence mode="wait">
-                    {friendsList.includes(item.userUid) ? (
-                      <motion.p
-                        key="friend"
-                        initial={{ opacity: 0, scale: 0.5 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="font-poppins text-[14px] text-gray-500"
-                      >
-                        Friend
-                      </motion.p>
-                    ) : friendRequestList.some(
-                        (fr) =>
-                          (fr.senderUid === data.user.uid &&
-                            fr.receiverUid === item.userUid) ||
-                          (fr.senderUid === item.userUid &&
-                            fr.receiverUid === data.user.uid)
-                      ) ? (
+                    {friendRequestList.some(
+                      (fr) =>
+                        (fr.senderUid === data.user.uid &&
+                          fr.receiverUid === item.userUid) ||
+                        (fr.senderUid === item.userUid &&
+                          fr.receiverUid === data.user.uid)
+                    ) ? (
                       <motion.button
                         key="cancel"
                         initial={{ opacity: 0, scale: 0.6 }}
