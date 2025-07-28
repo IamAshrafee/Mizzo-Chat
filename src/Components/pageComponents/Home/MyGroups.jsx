@@ -3,9 +3,6 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdOutlineCreateNewFolder } from "react-icons/md";
 import React, { useState, useEffect } from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import ProfilePicture2 from "../../../assets/images/ProfilePicture1.jpg";
-import GroupProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
 import {
   getDatabase,
   ref,
@@ -13,9 +10,12 @@ import {
   set,
   push,
   remove,
+  update,
 } from "firebase/database";
 import { useSelector } from "react-redux";
 import { toast, Toaster } from "sonner";
+import ProfilePicture2 from "../../../assets/images/ProfilePicture1.jpg";
+import GroupProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
 
 const MyGroups = () => {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
@@ -26,6 +26,7 @@ const MyGroups = () => {
   const [groupName, setGroupName] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
   const [myGroupsList, setMyGroupsList] = useState([]);
+  const [joinRequests, setJoinRequests] = useState([]);
   const [groupNameError, setGroupNameError] = useState("");
 
   const handleGroupName = (e) => {
@@ -74,7 +75,37 @@ const MyGroups = () => {
       });
       setMyGroupsList(list);
     });
+
+    const joinRequestsRef = ref(db, "groupJoinRequests/");
+    onValue(joinRequestsRef, (snapshot) => {
+      const requests = [];
+      snapshot.forEach((item) => {
+        if (
+          item.val().adminId === data.user.uid &&
+          item.val().status === "pending"
+        ) {
+          requests.push({ ...item.val(), key: item.key });
+        }
+      });
+      setJoinRequests(requests);
+    });
   }, [data.user.uid, db]);
+
+  const handleAcceptRequest = (request) => {
+    const requestRef = ref(db, "groupJoinRequests/" + request.key);
+    update(requestRef, {
+      status: "accepted",
+    }).then(() => {
+      toast.success(`${request.requesterName} has joined the group!`);
+    });
+  };
+
+  const handleRejectRequest = (request) => {
+    const requestRef = ref(db, "groupJoinRequests/" + request.key);
+    remove(requestRef).then(() => {
+      toast.error(`${request.requesterName}'s request has been rejected.`);
+    });
+  };
 
   const handleShowNotification = () => {
     setShowNotification(true);
@@ -101,22 +132,23 @@ const MyGroups = () => {
             <AnimatePresence>
               {!showNotification && !showCreateGroup && (
                 <>
-                  <div className="relative">
-                    <motion.button
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.5 }}
-                      onClick={handleShowNotification}
-                      className="z-0 flex font-poppins gap-2 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
-                    >
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    onClick={handleShowNotification}
+                    className="z-0 flex font-poppins gap-2 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
+                  >
+                    <div className="relative">
                       <IoMdNotificationsOutline size={18} />
-                      <div className="absolute top-[-4px] left-[-4px] z-1 h-4 w-4 bg-blue-500 rounded-full flex items-center justify-center text-center text-[10px] text-white">
-                        1
-                      </div>
-
-                      <span>Requests</span>
-                    </motion.button>
-                  </div>
+                      {joinRequests.length > 0 && (
+                        <div className="absolute top-[-8px] right-[-8px] z-1 h-4 w-4 bg-blue-500 rounded-full flex items-center justify-center text-center text-[10px] text-white">
+                          {joinRequests.length}
+                        </div>
+                      )}
+                    </div>
+                    <span>Requests</span>
+                  </motion.button>
                   <motion.button
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -152,39 +184,64 @@ const MyGroups = () => {
               exit={{ opacity: 0, y: -20 }}
               className="flex-1 overflow-y-auto px-[22px] pb-[22px]"
             >
-              {/* Notification Panel Content */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-                className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]"
-              >
-                <div className="flex items-center gap-3">
-                  <img
-                    src={ProfilePicture2}
-                    alt=""
-                    className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                  />
-                  <div className="flex flex-col">
-                    <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                      Jackey Dane
-                    </p>
-                    <p className="text-primary-des font-poppins text-[12px] font-medium">
-                      Wants to join -{" "}
-                      <span className="text-gray-700">Big Boss</span>
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="cursor-pointer bg-green-600 text-white py-1.5 px-3 hover:bg-green-700 rounded-2xl text-[14px] font-poppins flex items-center justify-center"
+              {joinRequests.length > 0 ? (
+                joinRequests.map((request) => (
+                  <motion.div
+                    key={request.key}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{
+                      opacity: 0,
+                      y: -20,
+                      transition: { duration: 0.2 },
+                    }}
+                    className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]"
                   >
-                    Accept
-                  </motion.button>
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={ProfilePicture2}
+                        alt=""
+                        className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
+                      />
+                      <div className="flex flex-col">
+                        <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
+                          {request.requesterName}
+                        </p>
+                        <p className="text-primary-des font-poppins text-[12px] font-medium">
+                          Wants to join -{" "}
+                          <span className="text-gray-700">
+                            {request.groupName}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <motion.button
+                        onClick={() => handleAcceptRequest(request)}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="cursor-pointer bg-green-600 text-white py-1.5 px-3 hover:bg-green-700 rounded-2xl text-[14px] font-poppins flex items-center justify-center"
+                      >
+                        Accept
+                      </motion.button>
+                      <motion.button
+                        onClick={() => handleRejectRequest(request)}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="cursor-pointer bg-red-600 text-white py-1.5 px-3 hover:bg-red-700 rounded-2xl text-[14px] font-poppins flex items-center justify-center"
+                      >
+                        Reject
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="flex justify-center items-center h-full">
+                  <p className="font-poppins text-gray-500">
+                    No new requests.
+                  </p>
                 </div>
-              </motion.div>
+              )}
             </motion.div>
           ) : showCreateGroup ? (
             <motion.div
@@ -252,7 +309,11 @@ const MyGroups = () => {
                     key={item.key}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
+                    exit={{
+                      opacity: 0,
+                      y: -20,
+                      transition: { duration: 0.2 },
+                    }}
                     className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]"
                   >
                     <div className="flex items-center gap-3">
