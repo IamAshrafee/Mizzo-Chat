@@ -2,7 +2,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ProfilePicture1 from "../../../assets/images/ProfilePicture1.jpg";
-import ProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
 import {
   getDatabase,
   onValue,
@@ -16,13 +15,12 @@ import { useSelector } from "react-redux";
 
 const FriendRequest = () => {
   const data = useSelector((state) => state.userLogInfo.value);
-
-  const [FriendRequestList, setFriendRequestList] = useState([]);
+  const [friendRequestList, setFriendRequestList] = useState([]);
   const db = getDatabase();
 
   useEffect(() => {
-    const FriendRequestRef = ref(db, "FriendRequest/");
-    onValue(FriendRequestRef, (snapshot) => {
+    const friendRequestRef = ref(db, "FriendRequest/");
+    onValue(friendRequestRef, (snapshot) => {
       const arr = [];
       snapshot.forEach((item) => {
         if (data.user.uid === item.val().receiverUid) {
@@ -31,15 +29,24 @@ const FriendRequest = () => {
       });
       setFriendRequestList(arr);
     });
-  }, []);
+  }, [data.user.uid, db]);
 
   const handleAcceptRequest = (item) => {
     set(push(ref(db, "friends")), {
-      ...item,
+      senderUid: item.senderUid,
+      senderName: item.senderName,
+      receiverUid: item.receiverUid,
+      receiverName: item.receiverName,
     }).then(() => {
       remove(ref(db, "FriendRequest/" + item.key)).then(() => {
         toast.success("Friend request accepted");
       });
+    });
+  };
+
+  const handleRejectRequest = (item) => {
+    remove(ref(db, "FriendRequest/" + item.key)).then(() => {
+      toast.error("Friend request rejected");
     });
   };
 
@@ -85,8 +92,9 @@ const FriendRequest = () => {
           </div>
           <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
             <AnimatePresence>
-              {FriendRequestList.map((item) => (
+              {friendRequestList.map((item) => (
                 <motion.div
+                  key={item.key}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -108,15 +116,18 @@ const FriendRequest = () => {
                       </p>
                     </div>
                   </div>
-                  <div>
+                  <div className="flex gap-2">
                     <motion.button
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.5 }}
                       onClick={() => handleAcceptRequest(item)}
-                      className="px-5 p-1 bg-slate-950 hover:bg-slate-800 text-white rounded-[20px] cursor-pointer font-poppins font-normal"
+                      className="px-5 p-1 bg-green-600 hover:bg-green-700 text-white rounded-[20px] cursor-pointer font-poppins font-normal"
                     >
                       Accept
+                    </motion.button>
+                    <motion.button
+                      onClick={() => handleRejectRequest(item)}
+                      className="px-5 p-1 bg-red-600 hover:bg-red-700 text-white rounded-[20px] cursor-pointer font-poppins font-normal"
+                    >
+                      Reject
                     </motion.button>
                   </div>
                 </motion.div>
