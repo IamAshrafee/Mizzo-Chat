@@ -12,7 +12,7 @@ import {
 } from "firebase/database";
 import { Toaster, toast } from "sonner";
 import { useSelector } from "react-redux";
-import { BiArrowBack } from "react-icons/bi";
+import { BiArrowBack, BiSearchAlt2 } from "react-icons/bi";
 
 const FriendRequest = ({ searchTerm, showSearch, onSearchToggle }) => {
   const data = useSelector((state) => state.userLogInfo.value);
@@ -56,7 +56,9 @@ const FriendRequest = ({ searchTerm, showSearch, onSearchToggle }) => {
     const sentDate = new Date(timestamp);
 
     const isToday = now.toDateString() === sentDate.toDateString();
-    const isYesterday = new Date(now.setDate(now.getDate() - 1)).toDateString() === sentDate.toDateString();
+    const isYesterday =
+      new Date(now.setDate(now.getDate() - 1)).toDateString() ===
+      sentDate.toDateString();
 
     if (isToday) {
       return `Today ${sentDate.toLocaleString("en-US", {
@@ -87,7 +89,7 @@ const FriendRequest = ({ searchTerm, showSearch, onSearchToggle }) => {
     <>
       <div className="flex-1 min-h-0 overflow-hidden">
         <div className="h-full bg-white rounded-[20px]  flex flex-col">
-          <div className="flex justify-between items-center px-[22px] pt-[22px]">
+          <div className="flex justify-between items-center px-[22px] pt-[22px] pb-[10px]">
             <h1 className="font-poppins text-[20px] font-[600]">
               <Toaster position="bottom-right" /> Friends Requests
             </h1>
@@ -98,9 +100,9 @@ const FriendRequest = ({ searchTerm, showSearch, onSearchToggle }) => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
                   onClick={() => onSearchToggle(true)}
-                  className=" font-poppins cursor-pointer text-[13px] bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
+                  className=" flex font-poppins gap-1.5 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
                 >
-                  Search
+                  <BiSearchAlt2 size={18} /> Search
                 </motion.button>
               ) : (
                 <motion.button
@@ -125,7 +127,7 @@ const FriendRequest = ({ searchTerm, showSearch, onSearchToggle }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]"
+                  className="flex mt-2 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]"
                 >
                   <div className="flex items-center gap-3">
                     <img

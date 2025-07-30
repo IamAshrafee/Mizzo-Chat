@@ -16,9 +16,7 @@ const Search = ({ searchTerm, setSearchTerm }) => {
   };
 
   return (
-    <form 
-      className="w-full my-1" 
-    >
+    <form className="w-full my-1">
       <label
         htmlFor="default-search"
         className="mb-2 text-sm font-medium text-gray-900 sr-only"
@@ -29,9 +27,9 @@ const Search = ({ searchTerm, setSearchTerm }) => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="relative rounded-[17px]"
+        className="relative rounded-[17px] border-2 border-white"
       >
-        <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+        <div className=" border-white absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
           <svg
             className="w-4 h-4 text-gray-500"
             aria-hidden="true"
@@ -59,32 +57,6 @@ const Search = ({ searchTerm, setSearchTerm }) => {
           required
           aria-label="Search"
         />
-        {searchTerm && (
-          <motion.button
-            type="button"
-            onClick={handleClear}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center"
-            aria-label="Clear search"
-          >
-            <svg
-              className="w-4 h-4 text-gray-500 hover:text-gray-700 transition-colors"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </motion.button>
-        )}
       </motion.div>
     </form>
   );

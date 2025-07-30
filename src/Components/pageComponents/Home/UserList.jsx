@@ -10,7 +10,7 @@ import {
 } from "firebase/database";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
-import { BiArrowBack, BiPlus } from "react-icons/bi";
+import { BiArrowBack, BiPlus, BiSearchAlt2 } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { Toaster, toast } from "sonner";
 
@@ -103,7 +103,7 @@ const UserList = ({ searchTerm, showSearch, onSearchToggle }) => {
   return (
     <div className="flex-1 min-h-0 overflow-hidden">
       <div className="h-full bg-white rounded-[20px]  flex flex-col">
-        <div className="flex justify-between items-center px-[22px] pt-[22px]">
+        <div className="flex justify-between items-center px-[22px] pt-[22px] pb-[10px]">
           <h1 className="font-poppins text-[20px] font-[600]">User List</h1>
           <div className="flex gap-1.5 items-center justify-center">
             {!showSearch ? (
@@ -112,9 +112,9 @@ const UserList = ({ searchTerm, showSearch, onSearchToggle }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
                 onClick={() => onSearchToggle(true)}
-                className=" font-poppins cursor-pointer text-[13px] bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
+                className=" flex font-poppins gap-1.5 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
               >
-                Search
+                <BiSearchAlt2 size={18} /> Search
               </motion.button>
             ) : (
               <motion.button
@@ -142,7 +142,7 @@ const UserList = ({ searchTerm, showSearch, onSearchToggle }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]"
+                  className="flex mt-2 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]"
                 >
                   <div className="flex items-center gap-3">
                     <img
