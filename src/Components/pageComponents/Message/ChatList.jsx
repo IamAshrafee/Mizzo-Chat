@@ -1,15 +1,18 @@
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setActiveChat } from "../../../slice/activeChatSlice";
 import ProfilePicture1 from "../../../assets/images/ProfilePicture1.jpg";
 import GroupProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
 
 const ChatList = () => {
   const db = getDatabase();
   const data = useSelector((state) => state.userLogInfo.value);
+  const dispatch = useDispatch();
   const [friends, setFriends] = useState([]);
   const [groups, setGroups] = useState([]);
+  const [activeChat, setActiveChatState] = useState(null);
 
   useEffect(() => {
     const friendRef = ref(db, "friends/");
@@ -64,6 +67,11 @@ const ChatList = () => {
     (a, b) => (b.createdAt || 0) - (a.createdAt || 0)
   );
 
+  const handleChatClick = (item) => {
+    dispatch(setActiveChat(item));
+    setActiveChatState(item.key);
+  };
+
   return (
     <div className="flex-1 min-h-0 overflow-hidden">
       <div className="h-full bg-white rounded-[20px] flex flex-col">
@@ -78,7 +86,10 @@ const ChatList = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-                className="flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)] cursor-pointer"
+                className={`flex mt-4 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)] cursor-pointer ${
+                  activeChat === item.key ? "bg-gray-100" : ""
+                }`}
+                onClick={() => handleChatClick(item)}
               >
                 <div className="flex items-center gap-3">
                   <img
@@ -92,16 +103,20 @@ const ChatList = () => {
                   />
                   <div className="flex flex-col">
                     <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                      {item.type === "friend"
-                        ? item.receiverUid === data.user.uid
-                          ? item.senderName
-                          : item.receiverName
-                        : item.groupName}
+                      {
+                        item.type === "friend"
+                          ? item.receiverUid === data.user.uid
+                            ? item.senderName
+                            : item.receiverName
+                          : item.groupName
+                      }
                     </p>
                     <p className="text-primary-des font-poppins text-[12px] font-medium">
-                      {item.type === "group"
-                        ? item.groupDescription
-                        : "Some message..."}
+                      {
+                        item.type === "group"
+                          ? item.groupDescription
+                          : "Some message..."
+                      }
                     </p>
                   </div>
                 </div>
