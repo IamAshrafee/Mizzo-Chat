@@ -1,13 +1,150 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ProfilePicture from "../../../assets/images/ProfilePicture.jpg";
 import ProfilePicture1 from "../../../assets/images/ProfilePicture1.jpg";
 import GroupProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
 import { useSelector } from "react-redux";
+import { getDatabase, ref, onValue, push, set } from "firebase/database";
 
 const Chat = () => {
+  const db = getDatabase();
   const activeChat = useSelector((state) => state.activeChat.value);
   const data = useSelector((state) => state.userLogInfo.value);
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+
+  const handleMessageSend = () => {
+    if (message.trim() !== "") {
+      const messageRef = ref(db, "messages/");
+      const newMessageRef = push(messageRef);
+      set(newMessageRef, {
+        senderId: data.user.uid,
+        senderName: data.user.displayName,
+        receiverId:
+          activeChat.type === "friend"
+            ? activeChat.receiverUid === data.user.uid
+              ? activeChat.senderUid
+              : activeChat.receiverUid
+            : activeChat.key,
+        message: message,
+        timestamp: Date.now(),
+        type: activeChat.type,
+      });
+      setMessage("");
+    }
+  };
+
+  useEffect(() => {
+    if (activeChat) {
+      const messageRef = ref(db, "messages/");
+      onValue(messageRef, (snapshot) => {
+        const messageList = [];
+        snapshot.forEach((item) => {
+          if (
+            (item.val().type === "friend" &&
+              ((item.val().senderId === data.user.uid &&
+                item.val().receiverId ===
+                  (activeChat.receiverUid === data.user.uid
+                    ? activeChat.senderUid
+                    : activeChat.receiverUid)) ||
+                (item.val().senderId ===
+                  (activeChat.receiverUid === data.user.uid
+                    ? activeChat.senderUid
+                    : activeChat.receiverUid) &&
+                  item.val().receiverId === data.user.uid))) ||
+            (item.val().type === "group" &&
+              item.val().receiverId === activeChat.key)
+          ) {
+            messageList.push({ ...item.val(), key: item.key });
+          }
+        });
+        setMessages(messageList);
+      });
+    }
+  }, [activeChat, data.user.uid, db]);
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) {
+      return "Today";
+    }
+    if (date.toDateString() === yesterday.toDateString()) {
+      return "Yesterday";
+    }
+    return date.toLocaleDateString();
+  };
+
+  const renderMessages = () => {
+    let lastDate = null;
+    return messages.map((item) => {
+      const currentDate = formatTimestamp(item.timestamp);
+      const showDate = currentDate !== lastDate;
+      lastDate = currentDate;
+      return (
+        <div key={item.key}>
+          {showDate && (
+            <div className="text-center my-4">
+              <span className="bg-gray-200 text-gray-600 text-xs font-semibold px-2 py-1 rounded-full">
+                {currentDate}
+              </span>
+            </div>
+          )}
+          <div
+            className={`flex items-end gap-3 mb-4 ${
+              item.senderId === data.user.uid ? "flex-row-reverse" : ""
+            }`}
+          >
+            <img
+              src={
+                item.senderId === data.user.uid
+                  ? ProfilePicture
+                  : ProfilePicture1
+              }
+              alt=""
+              className="rounded-full w-[30px] h-[30px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
+            />
+            <div className="flex flex-col">
+              {activeChat.type === "group" &&
+                item.senderId !== data.user.uid && (
+                  <p
+                    className={`text-primary-des font-poppins text-[12px] font-medium ${
+                      item.senderId === data.user.uid ? "text-right" : ""
+                    }`}
+                  >
+                    {item.senderName}
+                  </p>
+                )}
+              <div
+                className={`flex gap-3 rounded-lg px-[14px] py-2 shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]  ${
+                  item.senderId === data.user.uid
+                    ? "bg-slate-900 text-white"
+                    : "bg-slate-100"
+                }`}
+              >
+                <p className="font-poppins m-0 text-[15px] font-[400]  ">
+                  {item.message}
+                </p>
+                <p
+                  className={`text-primary-des font-poppins flex items-end text-[12px] font-medium ${
+                    item.senderId === data.user.uid ? "text-right" : ""
+                  }`}
+                >
+                  {new Date(item.timestamp).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
+  };
 
   return (
     <div className="flex-2 min-h-0 ">
@@ -50,38 +187,7 @@ const Chat = () => {
           </div>
           {/* Messages */}
           <div className="flex-1 overflow-y-auto px-[28px] pt-[28px] pb-[28px]">
-            {/* Message Item 1 */}
-            <div className="flex items-end gap-3 mb-4">
-              <img
-                src={ProfilePicture1}
-                alt=""
-                className="rounded-full w-[30px] h-[30px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-              />
-              <div className="flex flex-col">
-                <p className="text-primary-des font-poppins text-[12px] font-medium ">
-                  Today, 10:30 AM
-                </p>
-                <p className="font-poppins m-0 p-0 text-[15px] font-[400] bg-slate-100 rounded-lg py-2 px-[14px] shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]">
-                  Hey! How's it going?
-                </p>
-              </div>
-            </div>
-            {/* Message Reply Item 1 */}
-            <div className="flex justify-start flex-row-reverse items-end gap-3 mb-4">
-              <img
-                src={ProfilePicture}
-                alt=""
-                className="rounded-full w-[30px] h-[30px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-              />
-              <div className="flex flex-col">
-                <p className="text-primary-des flex justify-end font-poppins text-[12px] font-medium ">
-                  Today, 3:00 PM
-                </p>
-                <p className="font-poppins m-0 p-0 text-[15px] font-[400] bg-slate-900 text-white rounded-lg py-2 px-[14px] shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]">
-                  I'm good, thanks! Just working on some projects. How about you?
-                </p>
-              </div>
-            </div>
+            {renderMessages()}
           </div>
 
           {/* Input Area */}
@@ -96,8 +202,14 @@ const Chat = () => {
                 type="text"
                 placeholder="Type your message..."
                 className="flex-1 border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-primary-des"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleMessageSend()}
               />
-              <button className="bg-primary-des text-white rounded-lg py-2 px-4">
+              <button
+                className="bg-primary-des text-white rounded-lg py-2 px-4"
+                onClick={handleMessageSend}
+              >
                 Send
               </button>
             </div>
