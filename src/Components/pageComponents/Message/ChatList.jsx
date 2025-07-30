@@ -6,7 +6,7 @@ import { setActiveChat } from "../../../slice/activeChatSlice";
 import ProfilePicture1 from "../../../assets/images/ProfilePicture1.jpg";
 import GroupProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
 
-const ChatList = () => {
+const ChatList = ({ searchTerm }) => {
   const db = getDatabase();
   const data = useSelector((state) => state.userLogInfo.value);
   const dispatch = useDispatch();
@@ -63,14 +63,21 @@ const ChatList = () => {
     });
   }, [data.user.uid, db]);
 
-  const chatList = [...friends, ...groups].sort(
-    (a, b) => (b.createdAt || 0) - (a.createdAt || 0)
-  );
-
   const handleChatClick = (item) => {
     dispatch(setActiveChat(item));
     setActiveChatState(item.key);
   };
+
+  const filteredChatList = [...friends, ...groups]
+    .filter((item) => {
+      const name = item.type === "friend"
+          ? item.receiverUid === data.user.uid
+            ? item.senderName
+            : item.receiverName
+          : item.groupName;
+      return name.toLowerCase().includes(searchTerm.toLowerCase());
+    })
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
   return (
     <div className="flex-1 min-h-0 overflow-hidden">
@@ -80,7 +87,7 @@ const ChatList = () => {
         </div>
         <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
           <AnimatePresence>
-            {chatList.map((item) => (
+            {filteredChatList.map((item) => (
               <motion.div
                 key={item.key}
                 initial={{ opacity: 0, y: 20 }}

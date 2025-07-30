@@ -1,6 +1,6 @@
 import React from "react";
 
-const Search = () => {
+const Search = ({ searchTerm, setSearchTerm }) => {
   return (
     <form className="w-full">
       <label
@@ -28,10 +28,12 @@ const Search = () => {
           </svg>
         </div>
         <input
+          placeholder="Search by name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
           type="search"
           id="default-search"
           className="block w-full p-4 ps-10 text-sm text-gray-900 bg-white rounded-[20px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Search friends or messages..."
           required
         />
         <button
