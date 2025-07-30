@@ -105,13 +105,17 @@ const Chat = () => {
                   : ProfilePicture1
               }
               alt=""
-              className="rounded-full w-[30px] h-[30px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
+              className="rounded-full w-[30px] h-[30px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)] flex-shrink-0"
             />
-            <div className="flex flex-col">
+            <div
+              className={`flex flex-col max-w-[80%] ${
+                item.senderId === data.user.uid ? "items-end" : "items-start"
+              }`}
+            >
               {activeChat.type === "group" &&
                 item.senderId !== data.user.uid && (
                   <p
-                    className={`text-primary-des font-poppins text-[12px] font-medium ${
+                    className={`text-primary-des font-poppins text-[12px] font-medium mb-1 ${
                       item.senderId === data.user.uid ? "text-right" : ""
                     }`}
                   >
@@ -119,18 +123,20 @@ const Chat = () => {
                   </p>
                 )}
               <div
-                className={`flex gap-3 rounded-lg px-[14px] py-2 shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]  ${
+                className={`flex gap-2 rounded-lg px-[14px] py-2 shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)] max-w-[80vw] ${
                   item.senderId === data.user.uid
                     ? "bg-slate-900 text-white"
                     : "bg-slate-100"
                 }`}
               >
-                <p className="font-poppins m-0 text-[15px] font-[400]  ">
+                <p className="font-poppins m-0 text-[15px] font-[400] break-all whitespace-pre-wrap">
                   {item.message}
                 </p>
                 <p
-                  className={`text-primary-des font-poppins flex items-end text-[12px] font-medium ${
-                    item.senderId === data.user.uid ? "text-right" : ""
+                  className={`text-xs flex items-end font-medium flex-shrink-0 ${
+                    item.senderId === data.user.uid
+                      ? "text-gray-300"
+                      : "text-gray-500"
                   }`}
                 >
                   {new Date(item.timestamp).toLocaleTimeString([], {
@@ -147,12 +153,12 @@ const Chat = () => {
   };
 
   return (
-    <div className="flex-2 min-h-0 ">
+    <div className="flex-2 min-h-0">
       {activeChat ? (
         <div className="flex-col flex bg-white rounded-[20px] h-full">
           {/* Header */}
-          <div className=" px-[28px] pt-[28px]">
-            <div className=" flex justify-between items-center pb-3.5 border-b border-gray-200">
+          <div className="px-[28px] pt-[28px]">
+            <div className="flex justify-between items-center pb-3.5 border-b border-gray-200">
               <div className="flex flex-row items-center gap-3">
                 {/* Chat's Profile Picture  */}
                 <img
@@ -187,7 +193,7 @@ const Chat = () => {
           </div>
           {/* Messages */}
           <div className="flex-1 overflow-y-auto px-[28px] pt-[28px] pb-[28px]">
-            {renderMessages()}
+            <div className="max-w-full">{renderMessages()}</div>
           </div>
 
           {/* Input Area */}
@@ -207,7 +213,7 @@ const Chat = () => {
                 onKeyDown={(e) => e.key === "Enter" && handleMessageSend()}
               />
               <button
-                className="bg-primary-des text-white rounded-lg py-2 px-4"
+                className="bg-primary-des text-white rounded-lg py-2 px-4 hover:bg-primary-dark transition-colors"
                 onClick={handleMessageSend}
               >
                 Send
