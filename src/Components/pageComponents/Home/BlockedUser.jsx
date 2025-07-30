@@ -7,11 +7,10 @@ import ProfilePicture1 from "../../../assets/images/ProfilePicture1.jpg";
 import { toast, Toaster } from "sonner";
 import { BiArrowBack } from "react-icons/bi";
 
-const BlockedUser = () => {
+const BlockedUser = ({ searchTerm, showSearch, onSearchToggle }) => {
   const db = getDatabase();
   const data = useSelector((state) => state.userLogInfo.value);
   const [blockedList, setBlockedList] = useState([]);
-  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     const blockedRef = ref(db, "blocked/");
@@ -32,6 +31,10 @@ const BlockedUser = () => {
     });
   };
 
+  const filteredBlockedUsers = blockedList.filter((user) =>
+    user.blockedName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="flex-1 min-h-0 overflow-hidden">
       <Toaster position="bottom-right" />
@@ -44,7 +47,7 @@ const BlockedUser = () => {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                onClick={() => setShowSearch(true)}
+                onClick={() => onSearchToggle(true)}
                 className=" font-poppins cursor-pointer text-[13px] bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
               >
                 Search
@@ -54,7 +57,7 @@ const BlockedUser = () => {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                onClick={() => setShowSearch(false)}
+                onClick={() => onSearchToggle(false)}
                 className=" flex font-poppins gap-2 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
               >
                 <BiArrowBack size={18} /> Back
@@ -65,7 +68,7 @@ const BlockedUser = () => {
         </div>
         <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
           <AnimatePresence>
-            {blockedList.map((item) => (
+            {filteredBlockedUsers.map((item) => (
               <motion.div
                 key={item.key}
                 initial={{ opacity: 0, y: 20 }}

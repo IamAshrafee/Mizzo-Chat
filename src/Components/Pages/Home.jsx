@@ -14,6 +14,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import Search from "../pageComponents/Home/Search";
+import { AnimatePresence } from "framer-motion";
 
 // Main Home component
 const Home = () => {
@@ -23,6 +24,29 @@ const Home = () => {
   const data = useSelector((state) => state.userLogInfo.value);
   const navigate = useNavigate();
   const auth = getAuth();
+
+  const [searchStates, setSearchStates] = useState({
+    groups: { term: "", visible: false },
+    friends: { term: "", visible: false },
+    users: { term: "", visible: false },
+    friendRequests: { term: "", visible: false },
+    myGroups: { term: "", visible: false },
+    blockedUsers: { term: "", visible: false },
+  });
+
+  const handleSearchToggle = (card, visible) => {
+    setSearchStates((prev) => ({
+      ...prev,
+      [card]: { ...prev[card], visible, term: visible ? prev[card].term : "" },
+    }));
+  };
+
+  const handleSearchTermChange = (card, term) => {
+    setSearchStates((prev) => ({
+      ...prev,
+      [card]: { ...prev[card], term },
+    }));
+  };
 
   useEffect(() => {
     if (!data) {
@@ -84,44 +108,111 @@ const Home = () => {
         <div className="flex-1 flex flex-col h-full overflow-hidden gap-4">
           {/* Top Row */}
           <div className="flex-1 min-h-0 flex gap-4">
-            {/* First Column */}
             <div className="flex-1 flex flex-col min-h-0 gap-2.5">
-              <Search />
-              <GroupsList />
+              <AnimatePresence>
+                {searchStates.groups.visible && (
+                  <Search
+                    searchTerm={searchStates.groups.term}
+                    setSearchTerm={(term) => handleSearchTermChange("groups", term)}
+                  />
+                )}
+              </AnimatePresence>
+              <GroupsList
+                searchTerm={searchStates.groups.term}
+                showSearch={searchStates.groups.visible}
+                onSearchToggle={(visible) => handleSearchToggle("groups", visible)}
+              />
             </div>
 
-            {/* Second Column */}
             <div className="flex-1 flex flex-col min-h-0 gap-2.5">
-              <Search />
-              <Friends />
+              <AnimatePresence>
+                {searchStates.friends.visible && (
+                  <Search
+                    searchTerm={searchStates.friends.term}
+                    setSearchTerm={(term) => handleSearchTermChange("friends", term)}
+                  />
+                )}
+              </AnimatePresence>
+              <Friends
+                searchTerm={searchStates.friends.term}
+                showSearch={searchStates.friends.visible}
+                onSearchToggle={(visible) => handleSearchToggle("friends", visible)}
+              />
             </div>
 
-            {/* Third Column */}
-
             <div className="flex-1 flex flex-col min-h-0 gap-2.5">
-              <Search />
-              <UserList />
+              <AnimatePresence>
+                {searchStates.users.visible && (
+                  <Search
+                    searchTerm={searchStates.users.term}
+                    setSearchTerm={(term) => handleSearchTermChange("users", term)}
+                  />
+                )}
+              </AnimatePresence>
+              <UserList
+                searchTerm={searchStates.users.term}
+                showSearch={searchStates.users.visible}
+                onSearchToggle={(visible) => handleSearchToggle("users", visible)}
+              />
             </div>
           </div>
 
           {/* Bottom Row */}
           <div className="flex-1 min-h-0 flex gap-4">
-            {/* First Column */}
             <div className="flex-1 flex flex-col min-h-0 gap-2.5">
-              <Search />
-              <FriendRequest />
+              <AnimatePresence>
+                {searchStates.friendRequests.visible && (
+                  <Search
+                    searchTerm={searchStates.friendRequests.term}
+                    setSearchTerm={(term) =>
+                      handleSearchTermChange("friendRequests", term)
+                    }
+                  />
+                )}
+              </AnimatePresence>
+              <FriendRequest
+                searchTerm={searchStates.friendRequests.term}
+                showSearch={searchStates.friendRequests.visible}
+                onSearchToggle={(visible) =>
+                  handleSearchToggle("friendRequests", visible)
+                }
+              />
             </div>
 
-            {/* Second Column */}
             <div className="flex-1 flex flex-col min-h-0 gap-2.5">
-              <Search />
-              <MyGroups />
+              <AnimatePresence>
+                {searchStates.myGroups.visible && (
+                  <Search
+                    searchTerm={searchStates.myGroups.term}
+                    setSearchTerm={(term) => handleSearchTermChange("myGroups", term)}
+                  />
+                )}
+              </AnimatePresence>
+              <MyGroups
+                searchTerm={searchStates.myGroups.term}
+                showSearch={searchStates.myGroups.visible}
+                onSearchToggle={(visible) => handleSearchToggle("myGroups", visible)}
+              />
             </div>
 
-            {/* Third Column */}
             <div className="flex-1 flex flex-col min-h-0 gap-2.5">
-              <Search />
-              <BlockedUser />
+              <AnimatePresence>
+                {searchStates.blockedUsers.visible && (
+                  <Search
+                    searchTerm={searchStates.blockedUsers.term}
+                    setSearchTerm={(term) =>
+                      handleSearchTermChange("blockedUsers", term)
+                    }
+                  />
+                )}
+              </AnimatePresence>
+              <BlockedUser
+                searchTerm={searchStates.blockedUsers.term}
+                showSearch={searchStates.blockedUsers.visible}
+                onSearchToggle={(visible) =>
+                  handleSearchToggle("blockedUsers", visible)
+                }
+              />
             </div>
           </div>
         </div>

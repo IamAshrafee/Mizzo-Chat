@@ -1,15 +1,20 @@
-import React from "react";
+import { motion } from "framer-motion";
 
-const Search = () => {
+const Search = ({ searchTerm, setSearchTerm }) => {
   return (
-    <form className="w-full ">
+    <form className="w-full">
       <label
         htmlFor="default-search"
         className="mb-2 text-sm font-medium text-gray-900 sr-only"
       >
         Search
       </label>
-      <div className="relative rounded-[18px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)]">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="relative shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] rounded-[20px]"
+      >
         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
           <svg
             className="w-4 h-4 text-gray-500"
@@ -28,13 +33,15 @@ const Search = () => {
           </svg>
         </div>
         <input
+          placeholder="Search by name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
           type="search"
           id="default-search"
-          className="block w-full px-4 py-3 ps-10 text-sm text-gray-900 bg-white rounded-[20px] focus:ring-1"
-          placeholder="Search Groups, Friends, Chats..."
+          className="block w-full px-4 py-3 ps-10 text-sm text-gray-900 bg-white rounded-[20px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
         />
-      </div>
+      </motion.div>
     </form>
   );
 };

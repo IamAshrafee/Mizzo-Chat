@@ -17,7 +17,7 @@ import { toast, Toaster } from "sonner";
 import ProfilePicture2 from "../../../assets/images/ProfilePicture1.jpg";
 import GroupProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
 
-const MyGroups = () => {
+const MyGroups = ({ searchTerm, showSearch, onSearchToggle }) => {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const db = getDatabase();
@@ -120,7 +120,12 @@ const MyGroups = () => {
   const handleBack = () => {
     setShowCreateGroup(false);
     setShowNotification(false);
+    onSearchToggle(false);
   };
+
+  const filteredGroups = myGroupsList.filter((group) =>
+    group.groupName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex-1 min-h-0 overflow-hidden">
@@ -130,8 +135,17 @@ const MyGroups = () => {
           <h1 className="font-poppins text-[20px] font-[600]">My Groups</h1>
           <div className="flex gap-2 ">
             <AnimatePresence>
-              {!showNotification && !showCreateGroup && (
+              {!showNotification && !showCreateGroup && !showSearch && (
                 <>
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    onClick={() => onSearchToggle(true)}
+                    className=" font-poppins cursor-pointer text-[13px] bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
+                  >
+                    Search
+                  </motion.button>
                   <motion.button
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -160,7 +174,7 @@ const MyGroups = () => {
                   </motion.button>
                 </>
               )}
-              {(showNotification || showCreateGroup) && (
+              {(showNotification || showCreateGroup || showSearch) && (
                 <motion.button
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -304,7 +318,7 @@ const MyGroups = () => {
             >
               {/* My Groups List */}
               <AnimatePresence>
-                {myGroupsList.map((item) => (
+                {filteredGroups.map((item) => (
                   <motion.div
                     key={item.key}
                     initial={{ opacity: 0, y: 20 }}

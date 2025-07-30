@@ -16,11 +16,10 @@ import { CgBlock } from "react-icons/cg";
 import { toast, Toaster } from "sonner";
 import { BiArrowBack } from "react-icons/bi";
 
-const Friends = () => {
+const Friends = ({ searchTerm, showSearch, onSearchToggle }) => {
   const db = getDatabase();
   const data = useSelector((state) => state.userLogInfo.value);
   const [friendList, setFriendList] = useState([]);
-  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     const friendRef = ref(db, "friends/");
@@ -62,6 +61,11 @@ const Friends = () => {
     });
   };
 
+  const filteredFriends = friendList.filter((friend) => {
+    const friendName = friend.receiverUid === data.user.uid ? friend.senderName : friend.receiverName;
+    return friendName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   return (
     <div className="flex-1 min-h-0 overflow-hidden">
       <Toaster position="bottom-right" />
@@ -74,7 +78,7 @@ const Friends = () => {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                onClick={() => setShowSearch(true)}
+                onClick={() => onSearchToggle(true)}
                 className=" font-poppins cursor-pointer text-[13px] bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
               >
                 Search
@@ -84,7 +88,7 @@ const Friends = () => {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                onClick={() => setShowSearch(false)}
+                onClick={() => onSearchToggle(false)}
                 className=" flex font-poppins gap-2 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
               >
                 <BiArrowBack size={18} /> Back
@@ -95,7 +99,7 @@ const Friends = () => {
         </div>
         <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
           <AnimatePresence>
-            {friendList.map((item) => (
+            {filteredFriends.map((item) => (
               <motion.div
                 key={item.key}
                 initial={{ opacity: 0, y: 20 }}
@@ -144,3 +148,4 @@ const Friends = () => {
 };
 
 export default Friends;
+

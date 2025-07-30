@@ -1,4 +1,4 @@
-import { BiArrowBack, BiSearchAlt2 } from "react-icons/bi";
+import { BiArrowBack } from "react-icons/bi";
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import {
@@ -14,13 +14,12 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import ProfilePicture1 from "../../../assets/images/ProfilePicture1.jpg";
 import { toast, Toaster } from "sonner";
 
-const GroupsList = () => {
+const GroupsList = ({ searchTerm, showSearch, onSearchToggle }) => {
   const db = getDatabase();
   const data = useSelector((state) => state.userLogInfo.value);
   const [groupsList, setGroupsList] = useState([]);
   const [joinRequests, setJoinRequests] = useState({});
   const [hoveredGroup, setHoveredGroup] = useState(null);
-  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     const groupsRef = ref(db, "groups/");
@@ -83,6 +82,10 @@ const GroupsList = () => {
     return "Join";
   };
 
+  const filteredGroups = groupsList.filter((group) =>
+    group.groupName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="flex-1 min-h-0 overflow-hidden">
       <Toaster position="bottom-right" />
@@ -95,7 +98,7 @@ const GroupsList = () => {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                onClick={() => setShowSearch(true)}
+                onClick={() => onSearchToggle(true)}
                 className=" font-poppins cursor-pointer text-[13px] bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
               >
                 Search
@@ -105,7 +108,7 @@ const GroupsList = () => {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                onClick={() => setShowSearch(false)}
+                onClick={() => onSearchToggle(false)}
                 className=" flex font-poppins gap-2 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
               >
                 <BiArrowBack size={18} /> Back
@@ -116,7 +119,7 @@ const GroupsList = () => {
         </div>
         <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
           <AnimatePresence>
-            {groupsList.map((item) => {
+            {filteredGroups.map((item) => {
               const buttonState = getButtonState(item);
               return (
                 <motion.div

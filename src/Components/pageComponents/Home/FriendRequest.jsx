@@ -14,11 +14,10 @@ import { Toaster, toast } from "sonner";
 import { useSelector } from "react-redux";
 import { BiArrowBack } from "react-icons/bi";
 
-const FriendRequest = () => {
+const FriendRequest = ({ searchTerm, showSearch, onSearchToggle }) => {
   const data = useSelector((state) => state.userLogInfo.value);
   const [friendRequestList, setFriendRequestList] = useState([]);
   const db = getDatabase();
-  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     const friendRequestRef = ref(db, "FriendRequest/");
@@ -57,9 +56,7 @@ const FriendRequest = () => {
     const sentDate = new Date(timestamp);
 
     const isToday = now.toDateString() === sentDate.toDateString();
-    const isYesterday =
-      new Date(now.setDate(now.getDate() - 1)).toDateString() ===
-      sentDate.toDateString();
+    const isYesterday = new Date(now.setDate(now.getDate() - 1)).toDateString() === sentDate.toDateString();
 
     if (isToday) {
       return `Today ${sentDate.toLocaleString("en-US", {
@@ -82,6 +79,10 @@ const FriendRequest = () => {
     }
   };
 
+  const filteredFriendRequests = friendRequestList.filter((request) =>
+    request.senderName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
       <div className="flex-1 min-h-0 overflow-hidden">
@@ -96,7 +97,7 @@ const FriendRequest = () => {
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
-                  onClick={() => setShowSearch(true)}
+                  onClick={() => onSearchToggle(true)}
                   className=" font-poppins cursor-pointer text-[13px] bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
                 >
                   Search
@@ -106,7 +107,7 @@ const FriendRequest = () => {
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
-                  onClick={() => setShowSearch(false)}
+                  onClick={() => onSearchToggle(false)}
                   className=" flex font-poppins gap-2 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
                 >
                   <BiArrowBack size={18} /> Back
@@ -117,7 +118,7 @@ const FriendRequest = () => {
           </div>
           <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
             <AnimatePresence>
-              {friendRequestList.map((item) => (
+              {filteredFriendRequests.map((item) => (
                 <motion.div
                   key={item.key}
                   initial={{ opacity: 0, y: 20 }}

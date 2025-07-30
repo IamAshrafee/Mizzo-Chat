@@ -14,14 +14,13 @@ import { BiArrowBack, BiPlus } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { Toaster, toast } from "sonner";
 
-const UserList = () => {
+const UserList = ({ searchTerm, showSearch, onSearchToggle }) => {
   const [userList, setUserList] = useState([]);
   const db = getDatabase();
   const data = useSelector((state) => state.userLogInfo.value);
 
   const [friendRequestList, setFriendRequestList] = useState([]);
   const [friendsList, setFriendsList] = useState([]);
-  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     const userRef = ref(db, "users/");
@@ -97,6 +96,10 @@ const UserList = () => {
     return "Add";
   };
 
+  const filteredUsers = userList.filter((user) =>
+    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="flex-1 min-h-0 overflow-hidden">
       <div className="h-full bg-white rounded-[20px]  flex flex-col">
@@ -108,7 +111,7 @@ const UserList = () => {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                onClick={() => setShowSearch(true)}
+                onClick={() => onSearchToggle(true)}
                 className=" font-poppins cursor-pointer text-[13px] bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
               >
                 Search
@@ -118,7 +121,7 @@ const UserList = () => {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                onClick={() => setShowSearch(false)}
+                onClick={() => onSearchToggle(false)}
                 className=" flex font-poppins gap-2 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
               >
                 <BiArrowBack size={18} /> Back
@@ -130,7 +133,7 @@ const UserList = () => {
         <Toaster position="bottom-right" />
         <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
           <AnimatePresence>
-            {userList.map((item, index) => {
+            {filteredUsers.map((item, index) => {
               const buttonState = getButtonState(item);
               return (
                 <motion.div
