@@ -14,7 +14,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import Search from "../pageComponents/Home/Search";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 // Main Home component
 const Home = () => {
@@ -35,10 +35,22 @@ const Home = () => {
   });
 
   const handleSearchToggle = (card, visible) => {
-    setSearchStates((prev) => ({
-      ...prev,
-      [card]: { ...prev[card], visible, term: visible ? prev[card].term : "" },
-    }));
+    setSearchStates((prev) => {
+      const newState = { ...prev };
+      // Close all other search bars
+      for (const key in newState) {
+        if (key !== card) {
+          newState[key] = { ...newState[key], visible: false, term: "" };
+        }
+      }
+      // Toggle the selected card's search bar
+      newState[card] = {
+        ...newState[card],
+        visible,
+        term: visible ? newState[card].term : "",
+      };
+      return newState;
+    });
   };
 
   const handleSearchTermChange = (card, term) => {
@@ -108,7 +120,7 @@ const Home = () => {
         <div className="flex-1 flex flex-col h-full overflow-hidden gap-4">
           {/* Top Row */}
           <div className="flex-1 min-h-0 flex gap-4">
-            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
+            <motion.div layout className="flex-1 flex flex-col min-h-0 gap-1">
               <AnimatePresence>
                 {searchStates.groups.visible && (
                   <Search
@@ -122,9 +134,9 @@ const Home = () => {
                 showSearch={searchStates.groups.visible}
                 onSearchToggle={(visible) => handleSearchToggle("groups", visible)}
               />
-            </div>
+            </motion.div>
 
-            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
+            <motion.div layout className="flex-1 flex flex-col min-h-0 gap-1">
               <AnimatePresence>
                 {searchStates.friends.visible && (
                   <Search
@@ -138,9 +150,9 @@ const Home = () => {
                 showSearch={searchStates.friends.visible}
                 onSearchToggle={(visible) => handleSearchToggle("friends", visible)}
               />
-            </div>
+            </motion.div>
 
-            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
+            <motion.div layout className="flex-1 flex flex-col min-h-0 gap-1">
               <AnimatePresence>
                 {searchStates.users.visible && (
                   <Search
@@ -154,12 +166,12 @@ const Home = () => {
                 showSearch={searchStates.users.visible}
                 onSearchToggle={(visible) => handleSearchToggle("users", visible)}
               />
-            </div>
+            </motion.div>
           </div>
 
           {/* Bottom Row */}
           <div className="flex-1 min-h-0 flex gap-4">
-            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
+            <motion.div layout className="flex-1 flex flex-col min-h-0 gap-1">
               <AnimatePresence>
                 {searchStates.friendRequests.visible && (
                   <Search
@@ -177,9 +189,9 @@ const Home = () => {
                   handleSearchToggle("friendRequests", visible)
                 }
               />
-            </div>
+            </motion.div>
 
-            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
+            <motion.div layout className="flex-1 flex flex-col min-h-0 gap-1">
               <AnimatePresence>
                 {searchStates.myGroups.visible && (
                   <Search
@@ -193,9 +205,9 @@ const Home = () => {
                 showSearch={searchStates.myGroups.visible}
                 onSearchToggle={(visible) => handleSearchToggle("myGroups", visible)}
               />
-            </div>
+            </motion.div>
 
-            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
+            <motion.div layout className="flex-1 flex flex-col min-h-0 gap-1">
               <AnimatePresence>
                 {searchStates.blockedUsers.visible && (
                   <Search
@@ -213,7 +225,7 @@ const Home = () => {
                   handleSearchToggle("blockedUsers", visible)
                 }
               />
-            </div>
+            </motion.div>
           </div>
         </div>
       </Container>
