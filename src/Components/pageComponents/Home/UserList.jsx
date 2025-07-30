@@ -10,7 +10,7 @@ import {
 } from "firebase/database";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
-import { BiPlus } from "react-icons/bi";
+import { BiArrowBack, BiPlus } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { Toaster, toast } from "sonner";
 
@@ -21,6 +21,7 @@ const UserList = () => {
 
   const [friendRequestList, setFriendRequestList] = useState([]);
   const [friendsList, setFriendsList] = useState([]);
+  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     const userRef = ref(db, "users/");
@@ -66,8 +67,7 @@ const UserList = () => {
 
   const handleCancelRequest = (item) => {
     const request = friendRequestList.find(
-      (fr) =>
-        fr.senderUid === data.user.uid && fr.receiverUid === item.userUid
+      (fr) => fr.senderUid === data.user.uid && fr.receiverUid === item.userUid
     );
     if (request) {
       remove(ref(db, `FriendRequest/${request.key}`)).then(() => {
@@ -85,14 +85,12 @@ const UserList = () => {
     if (isFriend) return "Friends";
 
     const sentRequest = friendRequestList.some(
-      (fr) =>
-        fr.senderUid === data.user.uid && fr.receiverUid === item.userUid
+      (fr) => fr.senderUid === data.user.uid && fr.receiverUid === item.userUid
     );
     if (sentRequest) return "Pending";
 
     const receivedRequest = friendRequestList.some(
-      (fr) =>
-        fr.senderUid === item.userUid && fr.receiverUid === data.user.uid
+      (fr) => fr.senderUid === item.userUid && fr.receiverUid === data.user.uid
     );
     if (receivedRequest) return "Accept";
 
@@ -104,7 +102,30 @@ const UserList = () => {
       <div className="h-full bg-white rounded-[20px]  flex flex-col">
         <div className="flex justify-between items-center px-[22px] pt-[22px]">
           <h1 className="font-poppins text-[20px] font-[600]">User List</h1>
-          <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
+          <div className="flex gap-1.5 items-center justify-center">
+            {!showSearch ? (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                onClick={() => setShowSearch(true)}
+                className=" font-poppins cursor-pointer text-[13px] bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
+              >
+                Search
+              </motion.button>
+            ) : (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                onClick={() => setShowSearch(false)}
+                className=" flex font-poppins gap-2 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
+              >
+                <BiArrowBack size={18} /> Back
+              </motion.button>
+            )}
+            <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
+          </div>
         </div>
         <Toaster position="bottom-right" />
         <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">

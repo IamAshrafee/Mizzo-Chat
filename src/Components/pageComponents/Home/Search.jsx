@@ -2,14 +2,14 @@ import React from "react";
 
 const Search = () => {
   return (
-    <form className="w-full">
+    <form className="w-full ">
       <label
         htmlFor="default-search"
         className="mb-2 text-sm font-medium text-gray-900 sr-only"
       >
         Search
       </label>
-      <div className="relative shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)] rounded-[20px]">
+      <div className="relative rounded-[18px] shadow-[0_4px_20px_-5px_rgba(0,0,0,0.15)]">
         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
           <svg
             className="w-4 h-4 text-gray-500"
@@ -30,16 +30,10 @@ const Search = () => {
         <input
           type="search"
           id="default-search"
-          className="block w-full p-4 ps-10 text-sm text-gray-900 bg-white rounded-[20px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="block w-full px-4 py-3 ps-10 text-sm text-gray-900 bg-white rounded-[20px] focus:ring-1"
           placeholder="Search Groups, Friends, Chats..."
           required
         />
-        <button
-          type="submit"
-          className="text-white absolute end-2.5 bottom-2.5 bg-slate-900 hover:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium rounded-[20px] text-sm px-4 py-2 transition-colors"
-        >
-          Search
-        </button>
       </div>
     </form>
   );

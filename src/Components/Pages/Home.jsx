@@ -85,28 +85,44 @@ const Home = () => {
           {/* Top Row */}
           <div className="flex-1 min-h-0 flex gap-4">
             {/* First Column */}
-            <div className="flex-1 flex flex-col min-h-0 gap-4">
+            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
               <Search />
               <GroupsList />
             </div>
 
             {/* Second Column */}
-            <Friends />
+            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
+              <Search />
+              <Friends />
+            </div>
 
             {/* Third Column */}
-            <UserList />
+
+            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
+              <Search />
+              <UserList />
+            </div>
           </div>
 
           {/* Bottom Row */}
           <div className="flex-1 min-h-0 flex gap-4">
             {/* First Column */}
-            <FriendRequest />
+            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
+              <Search />
+              <FriendRequest />
+            </div>
 
             {/* Second Column */}
-            <MyGroups />
+            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
+              <Search />
+              <MyGroups />
+            </div>
 
             {/* Third Column */}
-            <BlockedUser />
+            <div className="flex-1 flex flex-col min-h-0 gap-2.5">
+              <Search />
+              <BlockedUser />
+            </div>
           </div>
         </div>
       </Container>
