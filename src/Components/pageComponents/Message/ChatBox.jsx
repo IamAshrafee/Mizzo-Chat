@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import ProfilePicture from "../../../assets/images/ProfilePicture.jpg";
-import ProfilePicture1 from "../../../assets/images/ProfilePicture1.jpg";
-import GroupProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
+import Avatar from "../../common/Avatar";
 import { useSelector } from "react-redux";
 import { getDatabase, ref, onValue, push, set } from "firebase/database";
 
@@ -98,14 +96,12 @@ const Chat = () => {
               item.senderId === data.user.uid ? "flex-row-reverse" : ""
             }`}
           >
-            <img
-              src={
+            <Avatar
+              name={
                 item.senderId === data.user.uid
-                  ? ProfilePicture
-                  : ProfilePicture1
+                  ? data.user.displayName
+                  : item.senderName
               }
-              alt=""
-              className="rounded-full w-[30px] h-[30px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)] flex-shrink-0"
             />
             <div
               className={`flex flex-col max-w-[80%] ${
@@ -161,14 +157,15 @@ const Chat = () => {
             <div className="flex justify-between items-center pb-3.5 border-b border-gray-200">
               <div className="flex flex-row items-center gap-3">
                 {/* Chat's Profile Picture  */}
-                <img
-                  src={
+                <Avatar
+                  name={
                     activeChat.type === "friend"
-                      ? ProfilePicture1
-                      : GroupProfilePicture2
+                      ? activeChat.receiverUid === data.user.uid
+                        ? activeChat.senderName
+                        : activeChat.receiverName
+                      : activeChat.groupName
                   }
-                  alt=""
-                  className="rounded-full w-[60px] h-[60px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
+                  isGroup={activeChat.type === "group"}
                 />
                 <div>
                   {/* ChatName  */}
@@ -199,11 +196,7 @@ const Chat = () => {
           {/* Input Area */}
           <div className="px-[28px] pb-[28px]">
             <div className="flex items-center gap-3">
-              <img
-                src={ProfilePicture}
-                alt=""
-                className="rounded-full w-[40px] h-[40px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-              />
+              <Avatar name={data.user.displayName} />
               <input
                 type="text"
                 placeholder="Type your message..."

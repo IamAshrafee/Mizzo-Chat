@@ -9,10 +9,10 @@ import {
   remove,
 } from "firebase/database";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import ProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
 import { BiArrowBack, BiPlus, BiSearchAlt2 } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { Toaster, toast } from "sonner";
+import Avatar from "../../common/Avatar";
 
 const UserList = ({ searchTerm, showSearch, onSearchToggle }) => {
   const [userList, setUserList] = useState([]);
@@ -145,11 +145,7 @@ const UserList = ({ searchTerm, showSearch, onSearchToggle }) => {
                   className="flex mt-2 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]"
                 >
                   <div className="flex items-center gap-3">
-                    <img
-                      src={ProfilePicture2}
-                      alt=""
-                      className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
-                    />
+                    <Avatar name={item.username} />
                     <div className="flex flex-col">
                       <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
                         {item.username || "Unknown User"}

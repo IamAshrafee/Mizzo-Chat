@@ -3,8 +3,7 @@ import React, { useState, useEffect } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveChat } from "../../../slice/activeChatSlice";
-import ProfilePicture1 from "../../../assets/images/ProfilePicture1.jpg";
-import GroupProfilePicture2 from "../../../assets/images/ProfilePicture2.jpeg";
+import Avatar from "../../common/Avatar";
 
 const ChatList = ({ searchTerm }) => {
   const db = getDatabase();
@@ -99,14 +98,15 @@ const ChatList = ({ searchTerm }) => {
                 onClick={() => handleChatClick(item)}
               >
                 <div className="flex items-center gap-3">
-                  <img
-                    src={
+                  <Avatar
+                    name={
                       item.type === "friend"
-                        ? ProfilePicture1
-                        : GroupProfilePicture2
+                        ? item.receiverUid === data.user.uid
+                          ? item.senderName
+                          : item.receiverName
+                        : item.groupName
                     }
-                    alt="Profile"
-                    className="rounded-full w-[50px] h-[50px] object-cover shadow-[0_2px_6px_-1px_rgba(0,0,0,0.1)]"
+                    isGroup={item.type === "group"}
                   />
                   <div className="flex flex-col">
                     <p className="font-poppins m-0 p-0 text-[15px] font-[600]">

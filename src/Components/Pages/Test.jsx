@@ -1,5 +1,5 @@
 import React from "react";
-import ProfilePicture from "../../assets/images/ProfilePicture.jpg";
+import Avatar from "../common/Avatar";
 import { GoHome } from "react-icons/go";
 import { IoExit } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
@@ -16,11 +16,7 @@ const Test = () => {
         <div className="flex-1 min-h-0 overflow-y-auto px-[22px] pb-[22px]">
           <div className="flex mt-4 justify-between items-center border-b border-primary-opacity pb-2.5">
             <div className="flex items-center gap-3">
-              <img
-                src={ProfilePicture}
-                alt=""
-                className="rounded-full w-[50px] h-[50px] object-cover"
-              />
+              <Avatar name="John Doe" />
               <div className="flex flex-col">
                 <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
                   John Doe
@@ -38,11 +34,7 @@ const Test = () => {
           </div>
           <div className="flex mt-4 justify-between items-center border-b border-primary-opacity pb-2.5">
             <div className="flex items-center gap-3">
-              <img
-                src={ProfilePicture}
-                alt=""
-                className="rounded-full w-[50px] h-[50px] object-cover"
-              />
+              <Avatar name="John Doe" />
               <div className="flex flex-col">
                 <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
                   John Doe
@@ -60,11 +52,7 @@ const Test = () => {
           </div>
           <div className="flex mt-4 justify-between items-center border-b border-primary-opacity pb-2.5">
             <div className="flex items-center gap-3">
-              <img
-                src={ProfilePicture}
-                alt=""
-                className="rounded-full w-[50px] h-[50px] object-cover"
-              />
+              <Avatar name="John Doe" />
               <div className="flex flex-col">
                 <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
                   John Doe
@@ -82,11 +70,7 @@ const Test = () => {
           </div>
           <div className="flex mt-4 justify-between items-center border-b border-primary-opacity pb-2.5">
             <div className="flex items-center gap-3">
-              <img
-                src={ProfilePicture}
-                alt=""
-                className="rounded-full w-[50px] h-[50px] object-cover"
-              />
+              <Avatar name="John Doe" />
               <div className="flex flex-col">
                 <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
                   John Doe

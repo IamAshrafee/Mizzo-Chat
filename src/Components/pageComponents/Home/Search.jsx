@@ -53,7 +53,7 @@ const Search = ({ searchTerm, setSearchTerm }) => {
           onChange={(e) => setSearchTerm(e.target.value)}
           type="search"
           id="default-search"
-          className="block w-full px-4 py-3 ps-10 text-sm text-gray-900 bg-white rounded-[17px] focus:ring-2 focus:ring-gray-500 focus:outline-none transition-all duration-200"
+          className="block w-full px-4 py-3 ps-10 text-sm text-gray-900 bg-white rounded-[17px] focus:ring-2 focus:ring-gray-300 focus:outline-none transition-all duration-200"
           required
           aria-label="Search"
         />

@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import ProfilePicture from "../../assets/images/ProfilePicture.jpg";
+import Avatar from "./Avatar";
 import { GoHome } from "react-icons/go";
 import { IoExit } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
@@ -106,11 +106,7 @@ const Sidebar = ({ activeItem = "Home" }) => {
     <>
       <div className="w-[120px] bg-black rounded-[20px] flex flex-col justify-between shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)] transition-all duration-300">
         <div className="h-[150px] w-full flex flex-col justify-center items-center">
-          <img
-            className="rounded-full w-18 h-18 object-cover shadow-[0_4px_6px_-1px_rgba(0,0,0,0.2)] hover:scale-105 transition-transform duration-300"
-            src={ProfilePicture}
-            alt="User profile"
-          />
+          <Avatar name={data.user.displayName} />
           <p className="text-gray-600 text-[12px] mt-3 text-center">
             {data.user.displayName}
           </p>
