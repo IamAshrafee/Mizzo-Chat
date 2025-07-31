@@ -14,7 +14,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import { CgBlock } from "react-icons/cg";
 import { toast, Toaster } from "sonner";
-import { BiArrowBack, BiSearchAlt2 } from "react-icons/bi";
+import Card from "../../common/Card";
+import SearchableList from "../../common/SearchableList";
 
 const Friends = ({ searchTerm, showSearch, onSearchToggle }) => {
   const db = getDatabase();
@@ -70,86 +71,68 @@ const Friends = ({ searchTerm, showSearch, onSearchToggle }) => {
   });
 
   return (
-    <div className="flex-1 min-h-0 overflow-hidden">
+    <Card
+      title="Friends"
+      headerContent={
+        <div className="flex gap-1.5 items-center justify-center">
+          <SearchableList
+            searchTerm={searchTerm}
+            showSearch={showSearch}
+            onSearchToggle={onSearchToggle}
+          />
+          <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
+        </div>
+      }
+    >
       <Toaster position="bottom-right" />
-      <div className="h-full bg-white rounded-[20px] flex flex-col">
-        <div className="flex justify-between items-center px-[22px] pt-[22px]  pb-[10px]">
-          <h1 className="font-poppins text-[20px] font-[600]">Friends</h1>
-          <div className="flex gap-1.5 items-center justify-center">
-            {!showSearch ? (
-              <motion.button
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-                onClick={() => onSearchToggle(true)}
-                className=" flex font-poppins gap-1.5 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
+      <AnimatePresence>
+        {filteredFriends.map((item) => (
+          <motion.div
+            key={item.key}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
+            className="flex mt-2 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]"
+          >
+            <div className="flex items-center gap-3">
+              <Avatar
+                name={
+                  item.receiverUid === data.user.uid
+                    ? item.senderName
+                    : item.receiverName
+                }
+              />
+              <div className="flex flex-col">
+                <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
+                  {item.receiverUid === data.user.uid
+                    ? item.senderName
+                    : item.receiverName}
+                </p>
+                <p className="text-primary-des font-poppins text-[12px] font-medium">
+                  Some message...
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleUnfriend(item.key)}
+                className="bg-gray-200 border border-gray-200 hover:border hover:border-gray-400 py-1.5 rounded-2xl flex justify-center items-center px-3 cursor-pointer"
               >
-                <BiSearchAlt2 size={18} /> Search
-              </motion.button>
-            ) : (
-              <motion.button
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-                onClick={() => onSearchToggle(false)}
-                className=" flex font-poppins gap-2 cursor-pointer text-[13px] justify-center items-center bg-gray-100 border border-gray-100 hover:border hover:border-gray-200 py-1 px-1.5 rounded-lg text-gray-900"
+                <AiOutlineUserDelete size={17} />
+              </button>
+              <button
+                onClick={() => handleBlock(item)}
+                className="bg-gray-200 border border-gray-200 hover:border hover:border-gray-400 py-1.5 rounded-2xl flex justify-center items-center px-3 cursor-pointer"
               >
-                <BiArrowBack size={18} /> Back
-              </motion.button>
-            )}
-            <BsThreeDotsVertical className="text-[20px] text-gray-500 hover:text-gray-700 cursor-pointer" />
-          </div>
-        </div>
-        <div className="flex-1 overflow-y-auto px-[22px] pb-[22px]">
-          <AnimatePresence>
-            {filteredFriends.map((item) => (
-              <motion.div
-                key={item.key}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-                className="flex mt-2 justify-between items-center pb-2.5 hover:bg-gray-50 rounded-lg p-2 transition-colors shadow-[0_2px_8px_-1px_rgba(0,0,0,0.08)]"
-              >
-                <div className="flex items-center gap-3">
-                  <Avatar
-                    name={
-                      item.receiverUid === data.user.uid
-                        ? item.senderName
-                        : item.receiverName
-                    }
-                  />
-                  <div className="flex flex-col">
-                    <p className="font-poppins m-0 p-0 text-[15px] font-[600]">
-                      {item.receiverUid === data.user.uid
-                        ? item.senderName
-                        : item.receiverName}
-                    </p>
-                    <p className="text-primary-des font-poppins text-[12px] font-medium">
-                      Some message...
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleUnfriend(item.key)}
-                    className="bg-gray-200 border border-gray-200 hover:border hover:border-gray-400 py-1.5 rounded-2xl flex justify-center items-center px-3 cursor-pointer"
-                  >
-                    <AiOutlineUserDelete size={17} />
-                  </button>
-                  <button
-                    onClick={() => handleBlock(item)}
-                    className="bg-gray-200 border border-gray-200 hover:border hover:border-gray-400 py-1.5 rounded-2xl flex justify-center items-center px-3 cursor-pointer"
-                  >
-                    <CgBlock size={17} />
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      </div>
-    </div>
+                <CgBlock size={17} />
+              </button>
+            </div>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </Card>
   );
 };
 
 export default Friends;
+
