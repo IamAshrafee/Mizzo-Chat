@@ -1,11 +1,27 @@
 import React from "react";
 import { HiUserGroup } from "react-icons/hi";
 
-const Avatar = ({ name, isGroup }) => {
+const Avatar = ({ name, isGroup, size = "large" }) => {
   const initial = name ? name.charAt(0).toUpperCase() : "";
 
+  const sizeClasses = {
+    small: "h-[30px] w-[30px]",
+    medium: "h-[40px] w-[40px]",
+    large: "h-[52px] w-[52px]",
+    xlarge: "h-[60px] w-[60px]",
+  };
+
+  const textSizeClasses = {
+    small: "text-sm",
+    medium: "text-base",
+    large: "text-xl",
+    xlarge: "text-2xl",
+  };
+
   return (
-    <div className="relative h-[52px] w-[52px] group perspective-500">
+    <div
+      className={`relative ${sizeClasses[size]} group perspective-500`}
+    >
       {/* 3D Container */}
       <div
         className="
@@ -17,9 +33,9 @@ const Avatar = ({ name, isGroup }) => {
       >
         {/* Front Face */}
         <div
-          className="
+          className={`
           absolute inset-0 flex items-center justify-center
-          font-poppins font-medium text-xl
+          font-poppins font-medium ${textSizeClasses[size]}
           text-slate-700 dark:text-slate-100
           bg-gradient-to-br from-slate-100 to-slate-200
           dark:from-slate-600 dark:to-slate-700
@@ -33,7 +49,7 @@ const Avatar = ({ name, isGroup }) => {
           before:bg-[radial-gradient(ellipse_at_70%_30%,rgba(255,255,255,0.9)_0%,transparent_70%)]
           before:dark:bg-[radial-gradient(ellipse_at_70%_30%,rgba(255,255,255,0.15)_0%,transparent_70%)]
           before:opacity-80
-        "
+        `}
         >
           {isGroup ? <HiUserGroup /> : initial}
         </div>
@@ -69,3 +85,4 @@ const Avatar = ({ name, isGroup }) => {
 };
 
 export default Avatar;
+

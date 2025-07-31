@@ -106,7 +106,7 @@ const Sidebar = ({ activeItem = "Home" }) => {
     <>
       <div className="w-[120px] bg-black rounded-[20px] flex flex-col justify-between shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3)] transition-all duration-300">
         <div className="h-[150px] w-full flex flex-col justify-center items-center">
-          <Avatar name={data.user.displayName} />
+          <Avatar name={data.user.displayName} size="xlarge" />
           <p className="text-gray-600 text-[12px] mt-3 text-center">
             {data.user.displayName}
           </p>

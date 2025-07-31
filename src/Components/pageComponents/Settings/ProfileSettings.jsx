@@ -15,7 +15,7 @@ const ProfileSettings = () => {
         Profile Settings
       </h1>
       <div className="flex flex-row items-center border-b border-gray-200 pb-6 mb-6">
-        <Avatar name={data.user.displayName} />
+        <Avatar name={data.user.displayName} size="xlarge" />
         <div className="flex flex-col ms-4">
           <p className="mt-2 text-gray-800 text-[20px] font-semibold">
             {data.user.displayName}

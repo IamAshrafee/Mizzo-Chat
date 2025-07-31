@@ -102,6 +102,7 @@ const Chat = () => {
                   ? data.user.displayName
                   : item.senderName
               }
+              size="small"
             />
             <div
               className={`flex flex-col max-w-[80%] ${
@@ -166,6 +167,7 @@ const Chat = () => {
                       : activeChat.groupName
                   }
                   isGroup={activeChat.type === "group"}
+                  size="xlarge"
                 />
                 <div>
                   {/* ChatName  */}
@@ -196,7 +198,7 @@ const Chat = () => {
           {/* Input Area */}
           <div className="px-[28px] pb-[28px]">
             <div className="flex items-center gap-3">
-              <Avatar name={data.user.displayName} />
+              <Avatar name={data.user.displayName} size="medium" />
               <input
                 type="text"
                 placeholder="Type your message..."
