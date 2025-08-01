@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import Messages from "./Components/Pages/Message";
 import Settings from "./Components/Pages/Settings";
 import { Toaster, toast } from "sonner";
+import MsgRemovePopup from "./Components/Popup/MsgRemovePopup";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: "/settings",
     element: <Settings />,
+  },
+  {
+    path: "/MsgRemovePopup",
+    element: <MsgRemovePopup />,
   },
 ]);
 
