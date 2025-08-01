@@ -11,10 +11,10 @@ const MsgRemovePopup = ({ onClose, onDelete }) => {
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.9, y: 8 }}
+        initial={{ scale: 0.9, y: 0 }}
         animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.9, y: 8 }}
-        transition={{ type: "spring", damping: 18 }}
+        exit={{ scale: 0.9, y: 0 }}
+        transition={{ type: "spring", damping: 18, duration: 1 }}
         className="h-max w-max px-5 pt-6 pb-7 bg-gray-200 flex flex-col justify-center rounded-lg"
         onClick={(e) => e.stopPropagation()}
       >
@@ -34,7 +34,7 @@ const MsgRemovePopup = ({ onClose, onDelete }) => {
           </button>
           <button
             onClick={onDelete}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+            className=" bg-red-600 text-white hover:bg-red-700 px-3 py-1.5 rounded-[12px] cursor-pointer hover: font-poppins text-[16px]"
           >
             Yes, Remove
           </button>

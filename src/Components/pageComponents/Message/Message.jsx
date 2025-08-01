@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Avatar from "../../common/Avatar";
 import MsgRemovePopup from "../../Popup/MsgRemovePopup";
 import deleteMessage from "./deleteMessage";
+import { BiBlock } from "react-icons/bi";
 
 const Message = ({
   message,
@@ -61,6 +62,7 @@ const Message = ({
               isSender ? "bg-slate-900 text-white" : "bg-slate-100"
             } ${isDeleted ? "bg-red-200 border-red-400" : ""}`}
           >
+            {isDeleted && <BiBlock className="text-red-500" size={20} />}
             <p className="font-poppins m-0 text-[15px] font-[400] break-all whitespace-pre-wrap">
               {message.message}
             </p>
@@ -73,12 +75,10 @@ const Message = ({
             </p>
           </div>
           {/* delete msg button  */}
-          {!isDeleted && (
+          {!isDeleted && isSender && (
             <div
               onClick={() => setShowPopup(true)}
-              className={`bg-slate-100 border rounded-[14px] border-slate-200 cursor-pointer flex items-center justify-center h-[35px] w-[35px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
-                isSender ? "block" : "hidden"
-              } `}
+              className="bg-slate-100 border rounded-[14px] border-slate-200 cursor-pointer flex items-center justify-center h-[35px] w-[35px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             >
               <MdOutlineDelete size={20} className="text-slate-600" />
             </div>
